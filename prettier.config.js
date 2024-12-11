@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   semi: true, // 세미콜론 사용
   singleQuote: true, // 작은따옴표 사용
   trailingComma: 'all', // 여러 줄에서 항상 쉼표 사용
