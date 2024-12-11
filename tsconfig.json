@@ -24,6 +24,12 @@
     "noUnusedParameters": true, // 사용하지 않는 파라미터 경고
     "noFallthroughCasesInSwitch": true, // switch 문의 누락 방지
 
+    /* import alias */
+    "baseUrl": "./", // 프로젝트 루트를 기본 경로로 설정
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
     /* 기타 */
     "forceConsistentCasingInFileNames": true, // 대소문자 일관성 강제
     "skipLibCheck": true, // 라이브러리 타입 검사 생략
