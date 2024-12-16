@@ -30,6 +30,3 @@ tsconfig.tsbuildinfo
 
 # Environment files
 .env*
-
-# package-lock.json
-package-lock.json
