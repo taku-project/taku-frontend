@@ -15,7 +15,7 @@ permissions: # GitHub Actions의 권한 설정
 jobs:
   storybook-preview:
     runs-on: ubuntu-20.04 # 워크플로우 실행 환경 (Ubuntu 20.04)
-    
+
     env:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
     steps:
@@ -38,15 +38,11 @@ jobs:
       - name: Chromatic에 게시
         id: chromatic
         uses: chromaui/action@latest
-
-        - name: Chromatic에 게시
-        id: chromatic
-        uses: chromaui/action@latest
-       
         with:
           onlyChanged: true # 변경된 스토리만 업로드
           autoAcceptChanges: true # Chromatic에서 변경 사항 자동 승인
-           debug: true # 디버그 모드 활성화
+          debug: true
+
       - name: 현재 시간 가져오기
         uses: josStorer/get-current-time@v2 # 현재 시간 가져오는 액션
         id: current-time
