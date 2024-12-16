@@ -1,4 +1,4 @@
-name: Storybook Preview
+name: Workflow
 
 on:
   pull_request:
@@ -22,9 +22,11 @@ jobs:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
 
     steps:
-      # 1. 저장소 체크아웃
+      # 1. 저장소 체크아웃 (전체 Git 히스토리 가져오기)
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 전체 Git 히스토리 가져오기
 
       # 2. Node.js 설정
       - name: Set up Node.js
