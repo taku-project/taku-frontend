@@ -20,10 +20,18 @@ jobs:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
     steps:
       - name: 저장소 체크아웃
-        uses: actions/checkout@v2  # v2로 변경
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0  # 전체 Git 히스토리 가져오기
           lfs: true       # LFS 지원이 필요한 경우 활성화
+
+      - name: 전체 Git 히스토리 가져오기
+        run: git fetch --unshallow  # shallow clone을 풀어서 전체 Git 히스토리 가져오기
+
+      - name: Git 상태 확인
+        run: |
+          git log --oneline -n 10   # 최근 10개의 커밋 로그 확인
+          git status                # 현재 Git 상태 확인
 
       - name: 캐시 종속성
         id: cache
@@ -53,7 +61,7 @@ jobs:
 
     outputs:
       storybook_url: ${{ steps.chromatic.outputs.storybookUrl }}
-      current_time: ${{ steps.current-time.outputs.formattedTime }}  # current_time 오타 수정
+      current_time: ${{ steps.current-time.outputs.formattedTime }}
 
   github-bot-storybook:
     runs-on: ubuntu-latest
@@ -66,4 +74,4 @@ jobs:
           comment_tag: ${{github.event.number}}-storybook
           message: |
             💄 Storybook: ${{ needs.storybook-preview.outputs.storybook_url }}
-            🕖 Update: ${{ needs.storybook-preview.outputs.current_time }}  # current_time 오타 수정
+            🕖 Update: ${{ needs.storybook-preview.outputs.current_time }}
