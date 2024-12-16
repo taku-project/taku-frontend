@@ -29,3 +29,10 @@ jobs:
         uses: chromaui/action@v1
         with:
           project-token: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+
+  diagnostics:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Check Chromatic diagnostics
+        run: cat chromatic-diagnostics.json
