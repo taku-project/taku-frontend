@@ -28,4 +28,5 @@ jobs:
       - name: Publish Storybook to Chromatic
         uses: chromaui/action@v1
         with:
-          project-token: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          token: ${{ secrets.CHROMATIC_PROJECT_TOKEN }} # projectToken이 아닌 token을 사용
+
