@@ -22,7 +22,7 @@ jobs:
       - name: 저장소 체크아웃
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # 전체 Git 히스토리 가져오기
 
       - name: 캐시 종속성
         id: cache
