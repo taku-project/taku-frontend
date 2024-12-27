@@ -1,5 +1,12 @@
+import Header from '@/layout/Header';
+
 const MainPage = () => {
-  return <div>메인 페이지</div>;
+  return (
+    <div>
+      <Header />
+      메인 페이지
+    </div>
+  );
 };
 
 export default MainPage;
