@@ -46,7 +46,7 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <Avatar>
               <AvatarImage src={LogoIcon} alt="Duckwho" />
-              <AvatarFallback>Duckwho</AvatarFallback>
+              <AvatarFallback>DW</AvatarFallback>
             </Avatar>
             <span className="font-semibold">Duckwho</span>
           </div>
