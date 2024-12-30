@@ -1,16 +1,16 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Suspense } from 'react';
 
-import { routes } from './routes';
+import { BrowserRouter } from 'react-router-dom';
+
+import Router from './routes';
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        {routes.map((route, index) => (
-          <Route key={index} path={route.path} element={route.element} />
-        ))}
-      </Routes>
-    </Router>
+    <BrowserRouter>
+      <Suspense>
+        <Router />
+      </Suspense>
+    </BrowserRouter>
   );
 };
 
