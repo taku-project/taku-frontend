@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { SignInForm } from '@/components/auth/SignInForm';
 import { Button } from '@/components/ui/button';
+import { KAKAO_OAUTH_URI } from '@/constants/api/oauth';
 
 const LoginPage = () => {
   return (
@@ -28,6 +29,11 @@ const LoginPage = () => {
           </Button>
         </Link>
       </h2>
+      <Link to={KAKAO_OAUTH_URI}>
+        <Button className="mb-6 mt-20 h-14 w-full bg-[#FEE500] py-4 font-semibold text-[#000000/85] hover:bg-[#FEE500]/90">
+          카카오 로그인
+        </Button>
+      </Link>
     </div>
   );
 };
