@@ -4,6 +4,9 @@ import { defineConfig } from 'vite';
 import checker from 'vite-plugin-checker';
 
 export default defineConfig({
+  server: {
+    port: 3000, // 원하는 포트 번호로 변경
+  },
   plugins: [
     react(),
     checker({

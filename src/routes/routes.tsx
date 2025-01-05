@@ -8,6 +8,7 @@ import DefaultLayout from '@/layout/DefaultLayout';
 // Lazy imports for components
 const MainPage = lazy(() => import('@/pages/MainPage'));
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
+const KakaoCallBack = lazy(() => import('@/pages/oauth/KakaoCallBack'));
 const SignupPage = lazy(() => import('@/pages/auth/SignUpPage'));
 const CommunityCategoryPage = lazy(
   () => import('@/pages/community/CommunityCategoryPage'),
@@ -43,6 +44,7 @@ export const routes = [
       { path: '/', element: <MainPage /> },
       { path: '/auth/login', element: <LoginPage /> },
       { path: '/auth/signup', element: <SignupPage /> },
+      { path: '/oauth/kakao', element: <KakaoCallBack /> },
       { path: '/community', element: <CommunityPage /> },
       { path: '/community/:category', element: <CommunityCategoryPage /> },
       { path: '/community/:category/:id', element: <CommunityDetailPage /> },
