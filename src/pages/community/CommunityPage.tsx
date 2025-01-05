@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { Search } from 'lucide-react';
+import { Search, Star } from 'lucide-react';
 
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
@@ -13,6 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import SectionLayout from '@/layout/SectionLayout';
 
 const TEST_TOKEN =
@@ -20,25 +23,25 @@ const TEST_TOKEN =
 
 const CommunityPage = () => {
   // 필터링을 위한 상태
-  const [filterArray, setFilterArray] = useState([
-    {
-      key: 'latest',
-      name: '최신순',
-    },
-    {
-      key: 'likes',
-      name: '좋아요순',
-    },
-    {
-      key: 'views',
-      name: '조회수순',
-    },
-  ]);
+  // const [filterArray, setFilterArray] = useState([
+  //   {
+  //     key: 'latest',
+  //     name: '최신순',
+  //   },
+  //   {
+  //     key: 'likes',
+  //     name: '좋아요순',
+  //   },
+  //   {
+  //     key: 'views',
+  //     name: '조회수순',
+  //   },
+  // ]);
 
   // 선택된 필터 상태
-  const [selectedFilter, setSelectedFilter] = useState<string>('latest');
+  const [selectedFilter, setSelectedFilter] = useState<string>('LATEST');
 
-  const [selectedPage, setSelectedPage] = useState<number>(1);
+  // const [selectedPage, setSelectedPage] = useState<number>(1);
 
   const getPosts = () => {
     // http://api-duckwho.xyz/api/posts?filter=latest&lastValue=0&limit=20&keyword=string&categoryId=0&asc=true
@@ -48,7 +51,7 @@ const CommunityPage = () => {
       filter: selectedFilter,
       lastValue: 0,
       limit: 20,
-      keyword: '',
+      keyword: 'string',
       categoryId: 0,
       asc: true,
     };
@@ -76,8 +79,40 @@ const CommunityPage = () => {
 
   return (
     <>
-      <div>
-        <aside></aside>
+      <div className="flex gap-4">
+        <aside className="w-[260px] bg-background">
+          <div className="space-y-4 py-4">
+            <h1>커뮤니티</h1>
+            <div className="bg-[#F1F5F9] px-3 py-2">
+              <h3>원하는 커뮤니티가 없나요?</h3>
+            </div>
+            <div className="px-3">
+              <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+                내 커뮤니티
+              </h2>
+              <div className="space-y-1">
+                {['주문/배송조회', '주문/배송조회', '주문/배송조회'].map(
+                  (item, i) => (
+                    <Button
+                      key={i}
+                      variant="ghost"
+                      className="w-full justify-between"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="h-4 w-4 rounded bg-purple-500" />
+                        <span>{item}</span>
+                      </div>
+                      <Star className="h-4 w-4" />
+                    </Button>
+                  ),
+                )}
+                <Button variant="ghost" className="w-full justify-start">
+                  <span>더보기</span>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </aside>
         <SectionLayout>
           {/* Search Bar max 560px */}
           <div className="relative mx-auto my-[80px] max-w-[560px]">
@@ -147,6 +182,31 @@ const CommunityPage = () => {
             </Pagination>
           </div>
         </SectionLayout>
+        <aside className="w-[260px] bg-background">
+          <div className="space-y-4 py-4">
+            <div className="px-3">
+              <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+                필터
+              </h2>
+              <ScrollArea className="h-auto">
+                <div className="space-y-2 p-2">
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary">label</Badge>
+                    <Badge variant="secondary">label</Badge>
+                    <Badge variant="secondary">label</Badge>
+                    <Badge variant="secondary">label</Badge>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary">label</Badge>
+                    <Badge variant="secondary">label</Badge>
+                    <Badge variant="secondary">label</Badge>
+                    <Badge variant="secondary">label</Badge>
+                  </div>
+                </div>
+              </ScrollArea>
+            </div>
+          </div>
+        </aside>
       </div>
     </>
   );
