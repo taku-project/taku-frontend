@@ -1,10 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-import { Search, Star } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ChevronDown, Search, Star } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
   Pagination,
@@ -18,8 +37,11 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import SectionLayout from '@/layout/SectionLayout';
 
-const TEST_TOKEN =
-  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsIm5pY2tuYW1lIjoibG9vY28iLCJwcm92aWRlclR5cGUiOiJLQUtBTyIsInByb2ZpbGVJbWciOiJodHRwczovL2R1Y2t3aG8tdmlkZW8uY2U0MDBhY2YwYThlYzg3MjY1YzhmZGE2ZWM2OGY5NTkucjIuY2xvdWRmbGFyZXN0b3JhZ2UuY29tL2E2ZDkwMGQyLWVhYzUtNDllMS04MTNlLWYxY2QzNmY4MDk1Yi5qcGciLCJzdGF0dXMiOiJBQ1RJVkUiLCJkb21lc3RpY0lkIjoic2VzOTg5MkBuYXZlci5jb20iLCJnZW5kZXIiOiJNRU4iLCJjcmVhdGVkQXQiOiIyMDI0LTEyLTE1VDE5OjM3OjE1LjA3NzU4NSIsInVwZGF0ZWRBdCI6IjIwMjQtMTItMTVUMTk6Mzc6MTUuMDc3NTg1Iiwicm9sZSI6IlJPTEVfVVNFUiIsImVtYWlsIjoic2VzOTg5MkBuYXZlci5jb20iLCJ0eXBlIjoiQUNDRVNTIiwiaWF0IjoxNzM0MzUyMDEzLCJleHAiOjE3MzY5NDQwMTN9.BHwwjp0X6SsZswgkY8qqImEfFWZ2McuRBnlofPsKlFw';
+const TEST_TOKEN = import.meta.env.ACCESS_TOKEN;
+
+const addPostsSchema = z.object({
+  title: z.string().min(1, '제목을 입력해주세요.'),
+});
 
 const CommunityPage = () => {
   // 필터링을 위한 상태
@@ -39,7 +61,7 @@ const CommunityPage = () => {
   // ]);
 
   // 선택된 필터 상태
-  const [selectedFilter, setSelectedFilter] = useState<string>('LATEST');
+  // const [selectedFilter, setSelectedFilter] = useState<string>('LATEST');
 
   // const [selectedPage, setSelectedPage] = useState<number>(1);
 
@@ -48,7 +70,7 @@ const CommunityPage = () => {
 
     const url = 'https://api-duckwho.xyz/api/posts';
     const params: any = {
-      filter: selectedFilter,
+      filter: 'LATEST',
       lastValue: 0,
       limit: 20,
       keyword: 'string',
@@ -73,41 +95,94 @@ const CommunityPage = () => {
       });
   };
 
+  const form = useForm<z.infer<typeof addPostsSchema>>({
+    resolver: zodResolver(addPostsSchema),
+    defaultValues: {
+      title: '',
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof addPostsSchema>) => {
+    try {
+      console.log(values);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     getPosts();
-  }, [selectedFilter]);
+  }, []);
 
   return (
     <>
       <div className="flex gap-4">
         <aside className="w-[260px] bg-background">
-          <div className="space-y-4 py-4">
-            <h1>커뮤니티</h1>
-            <div className="bg-[#F1F5F9] px-3 py-2">
-              <h3>원하는 커뮤니티가 없나요?</h3>
+          <div className="space-y-6 py-4">
+            <h1 className="text-2xl font-semibold tracking-tight">커뮤니티</h1>
+            <div className="flex h-[120px] flex-col items-center justify-center space-y-2 bg-[#F1F5F9] px-2 py-3">
+              <p className="text-base font-normal">원하는 커뮤니티가 없나요?</p>
+              {/* 버튼 색상 1E3A8A */}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">커뮤니티 만들기</Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>커뮤니티 만들기</DialogTitle>
+                  </DialogHeader>
+                  <Form {...form}>
+                    <form
+                      id="loginForm"
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="space-y-6"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-base text-[#767676]">
+                              제목
+                            </FormLabel>
+                            <FormControl className="h-14 p-4 text-[#767676] md:text-base">
+                              <Input placeholder="제목" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </form>
+                  </Form>
+                  <DialogFooter>
+                    <Button type="submit">저장하기</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
-            <div className="px-3">
-              <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+            <hr className="" />
+            <div>
+              <h2 className="mb-4 text-lg font-semibold tracking-tight">
                 내 커뮤니티
               </h2>
-              <div className="space-y-1">
+              <div className="flex-col space-y-6">
                 {['주문/배송조회', '주문/배송조회', '주문/배송조회'].map(
                   (item, i) => (
-                    <Button
+                    <div
                       key={i}
-                      variant="ghost"
-                      className="w-full justify-between"
+                      className="flex w-full cursor-pointer items-center justify-between"
                     >
                       <div className="flex items-center gap-2">
-                        <div className="h-4 w-4 rounded bg-purple-500" />
+                        <div className="h-6 w-10 bg-purple-500" />
                         <span>{item}</span>
                       </div>
-                      <Star className="h-4 w-4" />
-                    </Button>
+                      <Star className="h-6 w-6" />
+                    </div>
                   ),
                 )}
-                <Button variant="ghost" className="w-full justify-start">
+                <Button variant="ghost" className="w-full">
                   <span>더보기</span>
+                  <ChevronDown className="h-4 w-4" />
                 </Button>
               </div>
             </div>
@@ -146,8 +221,8 @@ const CommunityPage = () => {
           {/* Search Results */}
           <section>
             <h2 className="mb-6 text-xl font-medium">
-              <span className="font-bold text-[#9333EA]">N</span> 개의
-              커뮤니티가 검색됐다!
+              <span className="font-bold text-[#EAB308]">N</span> 개의
+              커뮤니티가 검색됐덕!
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {Array.from({ length: 4 }).map((_, i) => (

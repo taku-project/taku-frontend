@@ -5,7 +5,9 @@ interface SectionLayoutProps {
 }
 
 const SectionLayout = ({ children }: SectionLayoutProps) => {
-  return <section className="mx-auto max-w-[1160px]">{children}</section>;
+  return (
+    <section className="mx-auto w-full max-w-[1160px]">{children}</section>
+  );
 };
 
 export default SectionLayout;
