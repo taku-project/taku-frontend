@@ -8,12 +8,20 @@ import {
   MessageCircle,
   Settings,
   User,
+  X,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 import LogoIcon from '@/assets/logo_icon.png';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -81,13 +89,56 @@ export default function Header() {
           >
             <Bookmark className="h-10 w-10" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="hidden rounded-full md:inline-flex"
-          >
-            <Bell className="h-10 w-10" />
-          </Button>
+
+          <Drawer>
+            <DrawerTrigger>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hidden rounded-full md:inline-flex"
+              >
+                <Bell className="h-10 w-10" />
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="flex w-[640px] flex-col gap-10 py-10 pl-5 pr-[100px]">
+              <DrawerHeader className="flex items-end justify-between">
+                <DrawerTitle className="text-3xl font-semibold text-[#0F172A]">
+                  알림
+                </DrawerTitle>
+                <Button
+                  variant={'ghost'}
+                  className="h-auto p-0 text-sm font-medium text-[#0F172A] hover:bg-transparent"
+                >
+                  모두 읽음
+                </Button>
+              </DrawerHeader>
+              <div className="flex flex-col">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <div key={index} className="flex justify-between gap-4 p-4">
+                    <div className="h-10 w-10 rounded-full bg-purple-500"></div>
+                    <div className="flex flex-grow flex-col gap-1">
+                      <span className="text-sm font-medium text-[#3B83F6]">
+                        중고거래
+                      </span>
+                      <span className="text-base text-[#0F172A]">알림</span>
+                      <span className="text-sm text-[#0F172A]">
+                        알림 미리보기
+                      </span>
+                      <span className="text-xs font-light text-[#64748B]">
+                        시간
+                      </span>
+                    </div>
+                    <div>
+                      <Button variant={'ghost'} className="h-6 w-6 p-0">
+                        <X className="h-6 w-6" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </DrawerContent>
+          </Drawer>
+
           <div className="hidden md:inline-flex">
             {isLogin ? (
               <DropdownMenu>
@@ -120,7 +171,7 @@ export default function Header() {
               </DropdownMenu>
             ) : (
               <Button
-                className="bg-[#FDB813] text-black hover:bg-[#FDB813]/90"
+                className="bg-[#FDB813] text-white hover:bg-[#FDB813]/90"
                 onClick={handleLogin}
               >
                 로그인
