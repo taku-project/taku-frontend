@@ -6,6 +6,12 @@ export default {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      container: {
+        center: true,
+        screens: {
+          '2xl': '1920px',
+        },
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -22,8 +28,9 @@ export default {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
         },
+        //primary color 변경
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
+          DEFAULT: '#EAB308',
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
