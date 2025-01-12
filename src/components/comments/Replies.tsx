@@ -18,6 +18,7 @@ const Replies = ({ replies }: RepliesProps) => {
           variant="ghost"
           size="sm"
           onClick={() => setReplieOpen((prevValue) => !prevValue)}
+          className="text-primary hover:bg-primary"
         >
           {replieOpen ? <ChevronUp /> : <ChevronDown />}
           답글 {replies.length}개
@@ -26,14 +27,14 @@ const Replies = ({ replies }: RepliesProps) => {
       {replieOpen && (
         <ul className="flex flex-col gap-2">
           {replies.map((reply) => (
-            <li key={reply.id} className="flex flex-row gap-1">
+            <li key={reply.id} className="flex flex-row gap-2">
               <Avatar className="h-6 w-6">
                 <AvatarImage src={'https://github.com/shadcn.png'} />
                 <AvatarFallback>{reply.reply_text[0]}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col gap-1">
-                <p className="font-bold">익명</p>
-                <p>{reply.reply_text}</p>
+                <p className="font-bold leading-5">익명</p>
+                <p className="leading-5">{reply.reply_text}</p>
               </div>
             </li>
           ))}

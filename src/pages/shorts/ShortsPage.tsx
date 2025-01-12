@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { MessageSquareText, ThumbsDown, ThumbsUp, X } from 'lucide-react';
 
-import Replies from '@/components/comments/Replies';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import CommentForm from '@/components/comments/CommentForm';
+import CommentContent from '@/components/comments/CommentList';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -11,31 +11,7 @@ import {
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
 
-/*
-"data": [
-    {
-      "id": "string",
-      "comment": "string",
-      "shorts_id": "string",
-      "created_at": "2025-01-11T12:28:04.826Z",
-      "user_info": {
-        "id": 0,
-        "nickname": "string",
-        "profile_image": "string"
-      },
-      "replies": [
-        {
-          "id": "string",
-          "reply_text": "string",
-          "user_id": 0,
-          "created_at": "2025-01-11T12:28:04.826Z"
-        }
-      ]
-    }
-  ],
-*/
 const testComments = [
   {
     id: '1',
@@ -124,7 +100,7 @@ ies.mp4"
               <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-[#ffffff20] px-4 py-1">
                 <div className="flex flex-row items-center gap-2">
                   <h2 className="font-bold">댓글</h2>
-                  <p className="text-base">100</p>
+                  <p className="text-base">{testComments.length}</p>
                 </div>
                 <Button
                   size="icon"
@@ -136,53 +112,10 @@ ies.mp4"
                 </Button>
               </CardHeader>
               <CardContent className="h-full min-h-[600px]">
-                <ul className="flex flex-col gap-4 py-4">
-                  {testComments.map((comment) => (
-                    <li key={comment.id} className="flex flex-col gap-2">
-                      <div className="flex flex-row items-start gap-2">
-                        <Avatar>
-                          <AvatarImage
-                            src={comment.user_info.profile_image}
-                            alt={comment.user_info.nickname}
-                          />
-                          <AvatarFallback>
-                            {comment.user_info.nickname[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col gap-2">
-                          <p className="font-bold">
-                            {comment.user_info.nickname}
-                          </p>
-                          <p>{comment.comment}</p>
-                          <Replies replies={comment.replies} />
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                <CommentContent commentsArr={testComments} />
               </CardContent>
               <CardFooter className="flex items-start justify-between gap-2 border-t border-[#ffffff20] p-4">
-                <Avatar>
-                  <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="@shadcn"
-                  />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <div className="flex w-full flex-col items-end gap-2 bg-transparent">
-                  <Textarea
-                    placeholder="댓글 추가..."
-                    className="min-h-10 border-stone-700 bg-transparent"
-                  />
-                  <div className="flex gap-2">
-                    <Button variant="ghost" className="h-8 py-1">
-                      취소
-                    </Button>
-                    <Button variant="secondary" className="h-8 py-1">
-                      댓글
-                    </Button>
-                  </div>
-                </div>
+                <CommentForm />
               </CardFooter>
             </Card>
           </aside>
