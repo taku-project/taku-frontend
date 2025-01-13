@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import { AvatarImage } from '@radix-ui/react-avatar';
-import { EllipsisVertical } from 'lucide-react';
 
+import ReportButton from '../report/ReportButton';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Button } from '../ui/button';
 import CommentForm from './CommentForm';
@@ -33,13 +33,7 @@ const CommentItem = ({ comment }: CommentItemProps) => {
               </p>
               <p className="leading-5">{comment.comment}</p>
             </div>
-            <Button
-              size="icon"
-              variant={'ghost'}
-              className="h-8 w-fit px-2 py-0"
-            >
-              <EllipsisVertical />
-            </Button>
+            <ReportButton />
           </div>
           <Button
             variant="ghost"
