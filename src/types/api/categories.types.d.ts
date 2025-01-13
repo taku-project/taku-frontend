@@ -1,4 +1,12 @@
-import { operations } from './apiSchema.types';
+import { components, operations } from './apiSchema.types';
+
+export type CategoryListItem =
+  components['schemas']['ResponseCategorySeachDTO'];
+
+export type CategoryPageList =
+  components['schemas']['PageResponseCategorySeachDTO'];
+
+export type CategoryDetailItem = components['schemas']['ResponseCategoryDTO'];
 
 /**
  * path: '/api/category'

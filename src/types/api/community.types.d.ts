@@ -55,7 +55,7 @@ type CreatePostRequest = NonNullable<
   operations['createPost']['requestBody']
 >['content']['application/json'];
 type CreatePostSuccessResponse =
-  operations['createPost']['responses'][200]['content']['*/*'];
+  operations['createPost']['responses'][201]['content']['*/*'];
 
 /**
  * path: '/api/community/posts/{postId}'
