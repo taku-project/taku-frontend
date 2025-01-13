@@ -23,6 +23,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
+import { Separator } from '../ui/separator';
+import { Textarea } from '../ui/textarea';
+
 const items = [
   {
     id: '1',
@@ -59,14 +62,16 @@ const items = [
 ] as const;
 
 const FormSchema = z.object({
-  items: z.array(z.string()),
+  items: z.array(z.string()).nonempty('신고 사유를 최소 1개 이상 선택해주세요'),
+  content: z.string().optional(),
 });
 
 const ReportDialog = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      items: ['1', '2'],
+      items: [],
+      content: '',
     },
   });
 
@@ -76,15 +81,15 @@ const ReportDialog = () => {
 
   return (
     <Dialog>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <DialogTrigger asChild>
-            <Button variant="ghost" size="sm">
-              <Flag />
-              신고
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="sm">
+          <Flag />
+          신고
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <DialogHeader>
               <DialogTitle>신고</DialogTitle>
             </DialogHeader>
@@ -132,6 +137,26 @@ const ReportDialog = () => {
                       }}
                     />
                   ))}
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Separator />
+            {/* 상세내용(선택) */}
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>상세내용(선택)</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      className="w-full rounded-lg border border-gray-300 p-2 text-sm"
+                      placeholder="신고 사유에 대한 상세한 내용을 입력해주세요"
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -139,9 +164,9 @@ const ReportDialog = () => {
             <DialogFooter>
               <Button type="submit">신고</Button>
             </DialogFooter>
-          </DialogContent>
-        </form>
-      </Form>
+          </form>
+        </Form>
+      </DialogContent>
     </Dialog>
   );
 };

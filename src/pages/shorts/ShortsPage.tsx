@@ -11,6 +11,7 @@ import {
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
+import VideoList from '@/components/video/VideoList';
 
 const testComments = [
   {
@@ -56,18 +57,11 @@ const ShortsPage = () => {
   const [openComments, setOpenComments] = useState(true);
 
   return (
-    <div className="bg-stone-900">
+    <div className="h-full bg-stone-900">
       <div className={'flex w-full justify-center gap-20 p-4'}>
-        <section className="inset-x-0 flex w-[400px] items-end text-white">
-          {/* video div */}
-          <div className="h-full w-full overflow-hidden rounded-lg">
-            <video
-              className="h-full w-full"
-              src="https://www.w3schools.com/html/mov
-ies.mp4"
-              controls
-            />
-          </div>
+        <section className="inset-x-0 flex w-[600px] items-end text-white">
+          {/* video layout */}
+          <VideoList />
           {/* button layout */}
           <div className="flex flex-col items-center justify-center gap-2 text-center">
             <div>
@@ -95,7 +89,7 @@ ies.mp4"
           </div>
         </section>
         {openComments && (
-          <aside className="h-full w-[400px]">
+          <aside className="h-full w-[480px]">
             <Card className="h-full border border-[#ffffff20] bg-transparent text-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-[#ffffff20] px-4 py-1">
                 <div className="flex flex-row items-center gap-2">
@@ -111,7 +105,7 @@ ies.mp4"
                   <X size={64} />
                 </Button>
               </CardHeader>
-              <CardContent className="h-full min-h-[600px]">
+              <CardContent className="h-full min-h-[800px]">
                 <CommentContent commentsArr={testComments} />
               </CardContent>
               <CardFooter className="flex items-start justify-between gap-2 border-t border-[#ffffff20] p-4">
