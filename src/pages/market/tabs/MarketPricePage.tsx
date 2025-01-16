@@ -1,11 +1,67 @@
 import { useState } from 'react';
 
+import {
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  Title,
+  Tooltip,
+} from 'chart.js';
 import { TrendingDown, TrendingUp } from 'lucide-react';
+import { Line } from 'react-chartjs-2';
 
 import { cn } from '@/lib/utils';
 
+// Chart.js 컴포넌트 등록
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+);
+
 const MarketPricePage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<'1일' | '1주일'>('1일');
+
+  // 차트 옵션 설정
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: false,
+      },
+    },
+  };
+
+  // 차트 데이터 설정
+  const data = {
+    labels: ['1일전', '20시', '16시', '12시', '8시', '4시', '현재'],
+    datasets: [
+      {
+        label: '판매가',
+        data: [95000, 97000, 96000, 98000, 99000, 100000, 97000],
+        borderColor: 'rgb(59, 130, 246)', // blue-500
+        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+      },
+      {
+        label: '구매가',
+        data: [92000, 94000, 93000, 95000, 97000, 98000, 95000],
+        borderColor: 'rgb(239, 68, 68)', // red-500
+        backgroundColor: 'rgba(239, 68, 68, 0.5)',
+      },
+    ],
+  };
 
   return (
     <div className="flex flex-col space-y-8">
@@ -60,7 +116,9 @@ const MarketPricePage = () => {
             ))}
           </div>
           {/* 차트 영역 */}
-          <div className="aspect-video w-full rounded-lg bg-purple-500" />
+          <div className="aspect-video w-full rounded-lg bg-white p-4">
+            <Line options={options} data={data} />
+          </div>
         </div>
 
         {/* 최근 거래된 상품 */}
