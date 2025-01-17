@@ -1,160 +1,62 @@
 import { useState } from 'react';
 
-import {
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LineElement,
-  LinearScale,
-  PointElement,
-  Title,
-  Tooltip,
-} from 'chart.js';
-import { TrendingDown, TrendingUp } from 'lucide-react';
-import { Line } from 'react-chartjs-2';
-
-import { cn } from '@/lib/utils';
-
-// Chart.js 컴포넌트 등록
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-);
+import { Chart } from '@/components/market-price/Chart';
+import { PriceList } from '@/components/market-price/PriceList';
+import { RecentlyTradedProduct } from '@/components/market-price/RecentlyTradedProduct';
+import { RelatedProduct } from '@/components/market-price/RelatedProduct';
 
 const MarketPricePage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<'1일' | '1주일'>('1일');
 
-  // 차트 옵션 설정
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: false,
+  // Mock 데이터
+  const dailyMockData = {
+    success: true,
+    data: {
+      keyword: '나루토',
+      priceGraph: {
+        dataPoints: [
+          { date: [2025, 1, 15, 4], registeredPrice: 41250, soldPrice: 37125 },
+          { date: [2025, 1, 15, 8], registeredPrice: 43000, soldPrice: 38700 },
+          { date: [2025, 1, 15, 12], registeredPrice: 45000, soldPrice: 40500 },
+          { date: [2025, 1, 15, 16], registeredPrice: 47500, soldPrice: 42750 },
+          { date: [2025, 1, 15, 20], registeredPrice: 46000, soldPrice: 41400 },
+          { date: [2025, 1, 15, 24], registeredPrice: 48500, soldPrice: 43650 },
+        ],
       },
     },
   };
 
-  // 차트 데이터 설정
-  const data = {
-    labels: ['1일전', '20시', '16시', '12시', '8시', '4시', '현재'],
-    datasets: [
-      {
-        label: '판매가',
-        data: [95000, 97000, 96000, 98000, 99000, 100000, 97000],
-        borderColor: 'rgb(59, 130, 246)', // blue-500
-        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+  const weeklyMockData = {
+    success: true,
+    data: {
+      keyword: '나루토',
+      priceGraph: {
+        dataPoints: [
+          { date: [2025, 1, 9], registeredPrice: 41250, soldPrice: 37125 },
+          { date: [2025, 1, 10], registeredPrice: 45000, soldPrice: 40500 },
+          { date: [2025, 1, 11], registeredPrice: 43000, soldPrice: 38700 },
+          { date: [2025, 1, 12], registeredPrice: 47500, soldPrice: 42750 },
+          { date: [2025, 1, 13], registeredPrice: 46000, soldPrice: 41400 },
+          { date: [2025, 1, 14], registeredPrice: 48500, soldPrice: 43650 },
+          { date: [2025, 1, 15], registeredPrice: 50000, soldPrice: 45000 },
+        ],
       },
-      {
-        label: '구매가',
-        data: [92000, 94000, 93000, 95000, 97000, 98000, 95000],
-        borderColor: 'rgb(239, 68, 68)', // red-500
-        backgroundColor: 'rgba(239, 68, 68, 0.5)',
-      },
-    ],
+    },
   };
 
   return (
     <div className="flex flex-col space-y-8">
-      {/* 상품 정보 */}
-      <div className="space-y-20">
-        {/* 가격 정보 */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">원피스 루피 피규어</h2>
-          {/* 가격 표시 */}
-          <div className="flex space-x-16">
-            <div className="flex items-end gap-2">
-              <span className="text-[40px] font-bold text-blue-500">
-                100,000
-              </span>
-              <span className="mb-1 text-[28px] text-blue-500">원</span>
-              <div className="mb-2 flex items-center gap-1">
-                <TrendingDown className="h-5 w-5 text-blue-500" />
-                <span className="text-blue-500">3,000 원</span>
-                <span className="text-muted-foreground">(-n.nn%)</span>
-              </div>
-            </div>
-            <div className="flex items-end gap-2">
-              <span className="text-[40px] font-bold text-red-500">
-                100,000
-              </span>
-              <span className="mb-1 text-[28px] text-red-500">원</span>
-              <div className="mb-2 flex items-center gap-1">
-                <TrendingUp className="h-5 w-5 text-red-500" />
-                <span className="text-red-500">3,000 원</span>
-                <span className="text-muted-foreground">(-n.nn%)</span>
-              </div>
-            </div>
-          </div>
-
-          {/* 기간 탭 */}
-          <div className="flex h-[72px] gap-4">
-            {['1일', '1주일'].map((period) => (
-              <button
-                key={period}
-                onClick={() => setSelectedPeriod(period as '1일' | '1주일')}
-                className={cn(
-                  'relative pb-2 text-base transition-colors',
-                  selectedPeriod === period
-                    ? 'border-b font-medium text-foreground'
-                    : 'text-muted-foreground',
-                  selectedPeriod === period &&
-                    'after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-foreground',
-                )}
-              >
-                {period}
-              </button>
-            ))}
-          </div>
-          {/* 차트 영역 */}
-          <div className="aspect-video w-full rounded-lg bg-white p-4">
-            <Line options={options} data={data} />
-          </div>
-        </div>
-
-        {/* 최근 거래된 상품 */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">
-            최근 거래된 상품 (일주일 내)
-          </h3>
-          <div className="grid grid-cols-3 gap-4">
-            {['평균 거래가', '최고 거래가', '최저 거래가'].map(
-              (label, index) => (
-                <div
-                  key={index}
-                  className="rounded-lg bg-muted p-4 text-center"
-                >
-                  <div className="text-sm text-muted-foreground">{label}</div>
-                  <div className="mt-1 font-semibold">00,000 원</div>
-                </div>
-              ),
-            )}
-          </div>
-        </div>
-
-        {/* 연관 상품 */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">연관 상품</h3>
-          <div className="grid grid-cols-5 gap-4">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <div key={index} className="space-y-2">
-                <div className="aspect-square rounded-lg bg-purple-500" />
-                <div className="line-clamp-2 text-sm">상품명</div>
-                <div className="text-sm font-semibold">00,000 원</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <PriceList
+        selectedPeriod={selectedPeriod}
+        setSelectedPeriod={setSelectedPeriod}
+        priceData={selectedPeriod === '1일' ? dailyMockData : weeklyMockData}
+      />
+      <Chart
+        data={selectedPeriod === '1일' ? dailyMockData : weeklyMockData}
+        period={selectedPeriod}
+      />
+      <RecentlyTradedProduct />
+      <RelatedProduct />
     </div>
   );
 };
