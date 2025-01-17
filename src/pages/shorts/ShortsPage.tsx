@@ -3,8 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { MessageSquareText, ThumbsDown, ThumbsUp, X } from 'lucide-react';
 
-import CommentForm from '@/components/comments/CommentForm';
 import CommentContent from '@/components/comments/CommentList';
+import CommentMainForm from '@/components/comments/CommentMainForm';
 import LoadingSpinner from '@/components/loading/LoadingSpinner';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,46 +19,6 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
-
-const testComments = [
-  {
-    id: '1',
-    comment: '안녕하세요',
-    shorts_id: '1',
-    created_at: '2025-01-11T12:28:04.826Z',
-    user_info: {
-      id: 0,
-      nickname: '홍길동',
-      profile_image: '',
-    },
-    replies: [
-      {
-        id: '1',
-        reply_text: '답글1',
-        user_id: 0,
-        created_at: '2025-01-11T12:28:04.826Z',
-      },
-      {
-        id: '2',
-        reply_text: '답글2',
-        user_id: 0,
-        created_at: '2025-01-11T12:28:04.826Z',
-      },
-    ],
-  },
-  {
-    id: '2',
-    comment: '댓글입니다',
-    shorts_id: '1',
-    created_at: '2025-01-11T12:28:04.826Z',
-    user_info: {
-      id: 0,
-      nickname: '김삿갓',
-      profile_image: '',
-    },
-    replies: [],
-  },
-];
 
 export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -91,6 +51,11 @@ const ShortsPage = () => {
     return await axios.get(
       BACKEND_URL + '/api/shorts/' + shartsId + '/comment',
     );
+  };
+
+  //리셋 댓글목록
+  const resetComments = (resCommentArr: any[]) => {
+    setComments(resCommentArr);
   };
 
   const loadMoreVideos = () => {
@@ -200,13 +165,14 @@ const ShortsPage = () => {
     }
 
     getVedioDetail(selectedVideo.id).then((res) => {
-      // console.log(res.data);
+      console.log(res.data);
     });
 
     getComments(selectedVideo.id).then((res) => {
       console.log('댓글', res.data.data);
       if (res.data.data?.length > 0) {
         setComments(res.data.data);
+        return;
       }
       setComments([]);
     });
@@ -293,7 +259,7 @@ const ShortsPage = () => {
               <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-[#ffffff20] px-4 py-1">
                 <div className="flex flex-row items-center gap-2">
                   <h2 className="font-bold">댓글</h2>
-                  <p className="text-base">{comments.length}</p>
+                  <p className="text-base">{comments?.length}</p>
                 </div>
                 <Button
                   size="icon"
@@ -308,7 +274,10 @@ const ShortsPage = () => {
                 <CommentContent commentsArr={comments} />
               </CardContent>
               <CardFooter className="flex items-start justify-between gap-2 border-t border-[#ffffff20] p-4">
-                <CommentForm />
+                <CommentMainForm
+                  parentId={selectedVideo?.id}
+                  resetComments={resetComments}
+                />
               </CardFooter>
             </Card>
           </aside>
