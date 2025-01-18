@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 
+import { ProductDetailSkeleton } from '@/components/loading/jangter/ProductDetailSkeleton';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
@@ -36,28 +37,34 @@ import { Separator } from '@/components/ui/separator';
 import {
   cn,
   formatCurrency,
+  formatKoreanDate,
   formatLargeNumber,
   shareCurrentURL,
 } from '@/lib/utils';
+import { useProductDetails } from '@/queries/jangter';
 import type { FindProductDetailSuccessResponse } from '@/types/api/jangter.types';
 
-type ProductDetail = FindProductDetailSuccessResponse['data'];
-
-const PRODUCT_DETAIL_DUMMY: ProductDetail = {
-  title: '코웨이 공기 청정기',
-  description: '사용감 많이 없습니다\n필요하신분 편하게 톡 주세요 ',
-  price: 70000,
-  status: 'ACTIVE',
-  createdAt: '3시간 전',
-  viewCount: 56,
-  imageUrlList: [
-    'https://fastly.picsum.photos/id/64/200/200.jpg?hmac=lJVbDn4h2axxkM72s1w8X1nQxUS3y7li49cyg0tQBZU',
-    'https://picsum.photos/200',
-  ],
-};
+type ProductDetail = Exclude<
+  FindProductDetailSuccessResponse['data'],
+  undefined
+>;
+interface ProductDetailResponse extends FindProductDetailSuccessResponse {
+  data: ProductDetail;
+}
 
 const MarketDetailPage = () => {
   const { id } = useParams();
+  const productId = Number(id);
+  const { data, isLoading, error } = useProductDetails(productId!);
+
+  if (isLoading) return <ProductDetailSkeleton />;
+
+  if (error) return <div>오류가 발생했습니다...</div>;
+
+  const { data: productDetailData } = data as ProductDetailResponse;
+
+  const { title, description, price, createdAt, viewCount, imageUrlList } =
+    productDetailData;
   const handleChat = () => {
     console.log(id);
   };
@@ -65,18 +72,16 @@ const MarketDetailPage = () => {
     console.log('하트');
   };
   const isOwnPost = true;
-  const { title, description, price, createdAt, viewCount, imageUrlList } =
-    PRODUCT_DETAIL_DUMMY;
 
   return (
     <div className="mx-auto w-full max-w-[1240px] py-20">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <section>
           <div className="h-auto w-full">
-            <Carousel className="w-full">
-              <CarouselContent>
-                {imageUrlList &&
-                  imageUrlList.map((imageUrl, index) => (
+            {imageUrlList && !!imageUrlList.length && (
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {imageUrlList.map((imageUrl, index) => (
                     <CarouselItem key={imageUrl}>
                       <img
                         className="h-full w-full object-cover"
@@ -85,14 +90,20 @@ const MarketDetailPage = () => {
                       />
                     </CarouselItem>
                   ))}
-              </CarouselContent>
-              <CarouselPrevious
-                variant={'default'}
-                className="disabled:hidden"
-              />
-              <CarouselNext variant={'default'} className="disabled:hidden" />
-              <CarouselDots />
-            </Carousel>
+                </CarouselContent>
+                <CarouselPrevious
+                  variant={'default'}
+                  className="disabled:hidden"
+                />
+                <CarouselNext variant={'default'} className="disabled:hidden" />
+                <CarouselDots />
+              </Carousel>
+            )}
+            {(imageUrlList && !!imageUrlList.length) || (
+              <div className="flex aspect-square w-full items-center justify-center bg-gray-200">
+                등록된 상품 이미지가 없습니다...
+              </div>
+            )}
           </div>
         </section>
         <section className="flex flex-col gap-6">
@@ -130,7 +141,6 @@ const MarketDetailPage = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
-
                 <Button
                   variant={'ghost'}
                   onClick={handleLike}
@@ -140,7 +150,9 @@ const MarketDetailPage = () => {
                 </Button>
               </div>
             </div>
-            <h2 className="text-gray-400">{createdAt}</h2>
+            <h2 className="text-gray-400">
+              {formatKoreanDate(createdAt as string)}
+            </h2>
             <div className="flex gap-2">
               <Link to={'/'}>
                 <Badge variant={'outline'} className="hover:bg-accent">

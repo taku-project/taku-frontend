@@ -83,3 +83,70 @@ export const shareCurrentURL = async () => {
     alert('URL 복사에 실패했습니다. 다시 시도해주세요.');
   }
 };
+
+const MILLISECONDS_IN_A_SECOND = 1000;
+const SECONDS_IN_A_MINUTE = 60;
+const MINUTES_IN_AN_HOUR = 60;
+const HOURS_IN_A_DAY = 24;
+const DAYS_IN_A_WEEK = 7;
+const WEEKS_IN_A_MONTH = 4.34524; // 평균 주 수 (1년을 12로 나눈 주)
+const MONTHS_IN_A_YEAR = 12;
+
+/**
+ * 주어진 날짜 문자열을 한국식 날짜 형식으로 변환하거나,
+ * 경과 시간을 초, 분, 시간, 일, 주, 월 단위로 표시하는 함수.
+ *
+ * @function formatKoreanDate
+ * @returns {string} - 변환된 한국식 날짜 문자열 또는 경과 시간.
+ * @param {string} dateString - "YYYY.MM.DD" 형식의 날짜 문자열.
+ *
+ * 설명:
+ * - 초, 분, 시간, 일, 주, 월 단위로 경과 시간을 반환합니다.
+ * - 1년 이상일 경우 "YY년 MM월 DD일 HH시 MM분" 형식의 날짜를 반환합니다.
+ *
+ * 예제:
+ * ```
+ * formatKoreanDate("2025-01-17 11:49"); // "25.01.17" 또는 "23시간 전"
+ * ```
+ *
+ * 주의:
+ * - dateString은 반드시 ISO 형식의 유효한 날짜 문자열이어야 합니다.
+ * - 유효하지 않은 dateString이 입력되면 `Invalid Date` 에러가 발생합니다.
+ */
+export const formatKoreanDate = (dateString: string): string => {
+  const now = new Date();
+  const targetDate = new Date(dateString);
+  const timeDifference = now.getTime() - targetDate.getTime();
+
+  // 초, 분, 시간, 일, 주, 월 단위 계산
+  const seconds = Math.floor(timeDifference / MILLISECONDS_IN_A_SECOND);
+  const minutes = Math.floor(seconds / SECONDS_IN_A_MINUTE);
+  const hours = Math.floor(minutes / MINUTES_IN_AN_HOUR);
+  const days = Math.floor(hours / HOURS_IN_A_DAY);
+  const weeks = Math.floor(days / DAYS_IN_A_WEEK);
+  const months = Math.floor(weeks / WEEKS_IN_A_MONTH);
+
+  // 경과 시간 표시
+  if (seconds < SECONDS_IN_A_MINUTE) {
+    return `${seconds}초 전`;
+  } else if (minutes < MINUTES_IN_AN_HOUR) {
+    return `${minutes}분 전`;
+  } else if (hours < HOURS_IN_A_DAY) {
+    return `${hours}시간 전`;
+  } else if (days < DAYS_IN_A_WEEK) {
+    return `${days}일 전`;
+  } else if (weeks < WEEKS_IN_A_MONTH) {
+    return `${weeks}주 전`;
+  } else if (months < MONTHS_IN_A_YEAR) {
+    return `${months}개월 전`;
+  }
+
+  // 1년 이상이면 한국식 날짜 포맷으로 변환
+  const year = targetDate.getFullYear();
+  const month = targetDate.getMonth() + 1;
+  const day = targetDate.getDate();
+
+  return `${year}.${month.toString().padStart(2, '0')}.${day
+    .toString()
+    .padStart(2, '0')}`;
+};
