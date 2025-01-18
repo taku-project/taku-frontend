@@ -290,6 +290,33 @@ const CarouselProgressBar = React.forwardRef<
 });
 CarouselProgressBar.displayName = 'CarouselProgressBar';
 
+const CarouselDots = () => {
+  const { api, totalSlides, currentIndex } = useCarousel();
+
+  const goToSlide = (index: number) => {
+    api?.scrollTo(index);
+  };
+
+  return (
+    <div className="mt-4 flex items-center justify-center gap-2">
+      {Array.from({ length: totalSlides }).map((_, index) => (
+        <button
+          key={index}
+          onClick={() => goToSlide(index)}
+          className={cn(
+            'h-2 w-2 rounded-full transition-all',
+            index === currentIndex
+              ? 'scale-125 bg-primary'
+              : 'bg-gray-300 hover:bg-gray-400',
+          )}
+          aria-label={`Go to slide ${index + 1}`}
+        />
+      ))}
+    </div>
+  );
+};
+CarouselDots.displayName = 'CarouselDots';
+
 export {
   type CarouselApi,
   Carousel,
@@ -298,4 +325,5 @@ export {
   CarouselPrevious,
   CarouselNext,
   CarouselProgressBar,
+  CarouselDots,
 };

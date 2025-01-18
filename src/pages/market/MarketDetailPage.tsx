@@ -13,10 +13,10 @@ import {
 import {
   Carousel,
   CarouselContent,
+  CarouselDots,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  CarouselProgressBar,
 } from '@/components/ui/carousel';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -64,9 +64,13 @@ const MarketDetailPage = () => {
                     </CarouselItem>
                   ))}
               </CarouselContent>
-              <CarouselPrevious className="disabled:hidden" />
-              <CarouselNext className="disabled:hidden" />
-              <CarouselProgressBar className="mt-3" />
+              <CarouselPrevious
+                variant={'default'}
+                className="disabled:hidden"
+              />
+              <CarouselNext variant={'default'} className="disabled:hidden" />
+
+              <CarouselDots />
             </Carousel>
           </div>
         </section>
