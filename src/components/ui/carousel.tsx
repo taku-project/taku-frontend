@@ -264,10 +264,7 @@ const CarouselNext = React.forwardRef<
 });
 CarouselNext.displayName = 'CarouselNext';
 
-const CarouselProgressBar = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }) => {
+const CarouselProgressBar = ({ className }: { className: string }) => {
   const { currentIndex, totalSlides } = useCarousel();
 
   const progress =
@@ -279,7 +276,6 @@ const CarouselProgressBar = React.forwardRef<
         'relative h-2 w-full overflow-hidden rounded-sm bg-gray-200',
         className,
       )}
-      {...props}
     >
       <div
         className="absolute h-full rounded-sm bg-primary transition-all"
@@ -287,7 +283,7 @@ const CarouselProgressBar = React.forwardRef<
       />
     </div>
   );
-});
+};
 CarouselProgressBar.displayName = 'CarouselProgressBar';
 
 const CarouselDots = () => {

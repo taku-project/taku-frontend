@@ -1,6 +1,7 @@
-import { LucideShare } from 'lucide-react';
-import { useParams } from 'react-router-dom';
+import { Bookmark, Heart, LucideShare } from 'lucide-react';
+import { Link, useParams } from 'react-router-dom';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -35,13 +36,16 @@ const PRODUCT_DETAIL_DUMMY: ProductDetail = {
   status: 'ACTIVE',
   createdAt: '3시간 전',
   viewCount: 56,
-  imageUrlList: ['https://picsum.photos/200', 'https://picsum.photos/200'],
+  imageUrlList: ['https://picsum.photos/200', 'https://picsum.photos/100'],
 };
 
 const MarketDetailPage = () => {
   const { id } = useParams();
   const handleChat = () => {
     console.log(id);
+  };
+  const handleLike = () => {
+    console.log('하트');
   };
   const { title, description, price, createdAt, viewCount, imageUrlList } =
     PRODUCT_DETAIL_DUMMY;
@@ -69,28 +73,51 @@ const MarketDetailPage = () => {
                 className="disabled:hidden"
               />
               <CarouselNext variant={'default'} className="disabled:hidden" />
-
               <CarouselDots />
             </Carousel>
           </div>
         </section>
         <section className="flex flex-col gap-6">
           <div className="flex flex-col gap-4">
-            <h1 className="text-3xl font-bold">{title}</h1>
+            <div className="flex items-center justify-between">
+              <h1 className="text-3xl font-bold">{title}</h1>
+              <Button variant={'ghost'} onClick={handleLike} className="p-2">
+                <Bookmark
+                  width={40}
+                  height={40}
+                  fill="#facc15"
+                  className="h-10 w-10 text-yellow-400"
+                />
+              </Button>
+            </div>
             <h2 className="text-[#B0B3BA]">{createdAt}</h2>
-            <h3 className="mt-4 text-2xl font-bold">
+            <div className="flex gap-2">
+              <Link to={'/'}>
+                <Badge variant={'outline'}>카테고리1</Badge>
+              </Link>
+              <Link to={'/'}>
+                <Badge variant={'outline'}>카테고리2</Badge>
+              </Link>
+              <Link to={'/'}>
+                <Badge variant={'outline'}>카테고리3</Badge>
+              </Link>
+            </div>
+            <h3 className="mt-2 text-2xl font-bold">
               {formatCurrency(price as number)}
             </h3>
           </div>
           <div>
-            <p className="text-lg">{description}</p>
-          </div>
-          <div>
-            <span className="text-sm text-[#B0B3BA]">
+            <span className="flex items-center text-sm text-[#B0B3BA]">
+              <Bookmark width={12} hanging={12} className="mr-1 inline" />
+              {`북마크 ${formatLargeNumber(viewCount as number)}`}
+              {' · '}
               {`조회 ${formatLargeNumber(viewCount as number)}`}
             </span>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center justify-between gap-4">
+            <Button variant={'ghost'} onClick={handleLike}>
+              <Heart fill="#ef4444" className="text-red-500" />
+            </Button>
             <Button onClick={handleChat} className="w-full">
               채팅하기
             </Button>
@@ -105,6 +132,13 @@ const MarketDetailPage = () => {
           </div>
         </section>
       </div>
+      <Separator className="my-16" />
+      <section>
+        <h4 className="mb-8 text-2xl font-bold">상품 정보</h4>
+        <div>
+          <p className="text-lg">{description}</p>
+        </div>
+      </section>
       <Separator className="my-16" />
       <section>
         <h4 className="mb-8 text-2xl font-bold">추천 상품</h4>
