@@ -57,3 +57,29 @@ export function formatLargeNumber(amount: number) {
   if (amount < MILL) return `${(amount / KILO).toFixed(1)}K`;
   return `${(amount / MILL).toFixed(1)}M`;
 }
+
+/**
+ * 현재 페이지의 URL을 클립보드에 복사하는 함수.
+ *
+ * @async
+ * @function handleShare
+ * @returns {Promise<void>} - 성공적으로 클립보드에 복사되었는지 여부.
+ *
+ * 설명:
+ * - 현재 페이지의 URL을 가져와 클립보드에 복사합니다.
+ * - 복사 성공 시 사용자에게 알림을 표시합니다.
+ * - 실패 시 에러를 콘솔에 출력하고 사용자에게 알림을 표시합니다.
+ *
+ * 예외 처리:
+ * - `navigator.clipboard` API 사용이 실패하면 에러 메시지를 표시합니다.
+ */
+export const shareCurrentURL = async () => {
+  try {
+    const currentUrl = window.location.href; // 현재 URL 가져오기
+    await navigator.clipboard.writeText(currentUrl); // 클립보드에 복사
+    alert('URL이 클립보드에 복사되었습니다!'); // 성공 알림
+  } catch (error) {
+    console.error('URL 복사에 실패했습니다.', error);
+    alert('URL 복사에 실패했습니다. 다시 시도해주세요.');
+  }
+};
