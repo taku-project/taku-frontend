@@ -14,3 +14,23 @@ import { twMerge } from 'tailwind-merge';
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+/**
+ * 숫자를 한국 통화 형식으로 변환하여 반환합니다.
+ *
+ * @param {number} amount - 변환할 숫자 값.
+ * @returns {string} - "###,###원" 형식의 문자열.
+ *
+ * 설명:
+ * - `toLocaleString('ko-KR')`를 사용하여 숫자를 한국어 지역화 형식으로 변환합니다.
+ *   - 3자리마다 쉼표(,)를 추가하는 작업 포함.
+ * - 변환된 숫자에 "원"을 추가하여 최종 형식을 완성합니다.
+ *
+ * 사용 예:
+ * formatCurrency(70000);  // "70,000원"
+ * formatCurrency(1234567); // "1,234,567원"
+ * formatCurrency(500);    // "500원"
+ */
+export function formatCurrency(amount: number) {
+  return `${amount.toLocaleString('ko-KR')}원`;
+}
