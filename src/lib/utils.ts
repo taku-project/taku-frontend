@@ -34,3 +34,26 @@ export function cn(...inputs: ClassValue[]) {
 export function formatCurrency(amount: number) {
   return `${amount.toLocaleString('ko-KR')}원`;
 }
+
+const KILO = 1000;
+const MILL = 1000000;
+/**
+ * 숫자를 크기에 따라 K(천 단위) 또는 M(백만 단위) 형식으로 변환합니다.
+ *
+ * @param {number} amount - 변환할 숫자 값.
+ * @returns {string} - 변환된 형식의 문자열.
+ *
+ * 설명:
+ * - 천 단위(1,000 이상)에서는 숫자 뒤에 'K'를 추가합니다.
+ * - 백만 단위(1,000,000 이상)에서는 숫자 뒤에 'M'을 추가합니다.
+ * - 해당하지 않는 숫자는 그대로 반환합니다.
+ *
+ * formatLargeNumber(700);      // "700"
+ * formatLargeNumber(1500);     // "1.5K"
+ * formatLargeNumber(2000000);  // "2M"
+ */
+export function formatLargeNumber(amount: number) {
+  if (amount < KILO) return amount.toString();
+  if (amount < MILL) return `${(amount / KILO).toFixed(1)}K`;
+  return `${(amount / MILL).toFixed(1)}M`;
+}
