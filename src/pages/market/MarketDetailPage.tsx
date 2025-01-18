@@ -10,6 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 import { Separator } from '@/components/ui/separator';
 import {
   formatCurrency,
@@ -43,13 +50,22 @@ const MarketDetailPage = () => {
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <section>
           <div className="h-auto">
-            {imageUrlList && (
-              <img
-                className="h-full w-full object-cover"
-                src={imageUrlList[0]}
-                alt="상품 이미지"
-              />
-            )}
+            <Carousel className="w-full">
+              <CarouselContent>
+                {imageUrlList &&
+                  imageUrlList.map((imageUrl, index) => (
+                    <CarouselItem key={imageUrl}>
+                      <img
+                        className="h-full w-full object-cover"
+                        src={imageUrl}
+                        alt={`${index}번째 상품 이미지`}
+                      />
+                    </CarouselItem>
+                  ))}
+              </CarouselContent>
+              <CarouselPrevious className="disabled:hidden" />
+              <CarouselNext className="disabled:hidden" />
+            </Carousel>
           </div>
         </section>
         <section className="flex flex-col gap-6">
