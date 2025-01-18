@@ -27,6 +27,8 @@ type CarouselContextProps = {
   scrollNext: () => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
+  currentIndex: number;
+  totalSlides: number;
 } & CarouselProps;
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
@@ -66,6 +68,8 @@ const Carousel = React.forwardRef<
     );
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
+    const [currentIndex, setCurrentIndex] = React.useState(0);
+    const [totalSlides, setTotalSlides] = React.useState(0);
 
     const onSelect = React.useCallback((api: CarouselApi) => {
       if (!api) {
@@ -74,6 +78,7 @@ const Carousel = React.forwardRef<
 
       setCanScrollPrev(api.canScrollPrev());
       setCanScrollNext(api.canScrollNext());
+      setCurrentIndex(api.selectedScrollSnap());
     }, []);
 
     const scrollPrev = React.useCallback(() => {
@@ -96,6 +101,12 @@ const Carousel = React.forwardRef<
       },
       [scrollPrev, scrollNext],
     );
+
+    React.useEffect(() => {
+      if (api) {
+        setTotalSlides(api.scrollSnapList().length);
+      }
+    }, [api]);
 
     React.useEffect(() => {
       if (!api || !setApi) {
@@ -131,6 +142,8 @@ const Carousel = React.forwardRef<
           scrollNext,
           canScrollPrev,
           canScrollNext,
+          currentIndex,
+          totalSlides,
         }}
       >
         <div
@@ -251,6 +264,32 @@ const CarouselNext = React.forwardRef<
 });
 CarouselNext.displayName = 'CarouselNext';
 
+const CarouselProgressBar = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }) => {
+  const { currentIndex, totalSlides } = useCarousel();
+
+  const progress =
+    totalSlides > 0 ? ((currentIndex + 1) / totalSlides) * 100 : 0;
+
+  return (
+    <div
+      className={cn(
+        'relative h-2 w-full overflow-hidden rounded-sm bg-gray-200',
+        className,
+      )}
+      {...props}
+    >
+      <div
+        className="absolute h-full rounded-sm bg-primary transition-all"
+        style={{ width: `${progress}%` }}
+      />
+    </div>
+  );
+});
+CarouselProgressBar.displayName = 'CarouselProgressBar';
+
 export {
   type CarouselApi,
   Carousel,
@@ -258,4 +297,5 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselProgressBar,
 };

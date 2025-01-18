@@ -16,6 +16,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  CarouselProgressBar,
 } from '@/components/ui/carousel';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -65,6 +66,7 @@ const MarketDetailPage = () => {
               </CarouselContent>
               <CarouselPrevious className="disabled:hidden" />
               <CarouselNext className="disabled:hidden" />
+              <CarouselProgressBar className="mt-3" />
             </Carousel>
           </div>
         </section>
