@@ -2,6 +2,14 @@ import { LucideShare } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import {
   formatCurrency,
@@ -75,12 +83,43 @@ const MarketDetailPage = () => {
           </div>
         </section>
       </div>
-      <Separator className="my-10" />
+      <Separator className="my-16" />
       <section>
         <h4 className="mb-8 text-2xl font-bold">추천 상품</h4>
         <div className="flex flex-wrap gap-4">
           {[1, 2, 3].map((num: number) => (
-            <div key={num}>상품</div>
+            <Card key={num}>
+              <CardHeader>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription>Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p>Card Content</p>
+              </CardContent>
+              <CardFooter>
+                <p>Card Footer</p>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </section>
+      <Separator className="my-16" />
+      <section>
+        <h4 className="mb-8 text-2xl font-bold">판매자의 다른 상품</h4>
+        <div className="flex flex-wrap gap-4">
+          {[1, 2, 3].map((num: number) => (
+            <Card key={num}>
+              <CardHeader>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription>Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p>Card Content</p>
+              </CardContent>
+              <CardFooter>
+                <p>Card Footer</p>
+              </CardFooter>
+            </Card>
           ))}
         </div>
       </section>
