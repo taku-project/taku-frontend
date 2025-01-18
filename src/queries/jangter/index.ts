@@ -1,6 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { getProductDetail } from '@/services/jangter';
+import { getProductDetail, createProduct } from '@/services/jangter';
+
+export const createProduct = () => {
+  
+}
 
 export const useProductDetails = (productId: number) => {
   return useQuery({
