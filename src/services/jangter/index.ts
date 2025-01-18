@@ -1,4 +1,4 @@
-import ducku from '@/lib/axiosInstance';
+import { ducku, duckuWithAuth } from '@/lib/axiosInstance';
 import {
   CreateProductRequest,
   CreateProductSuccessResponse,
@@ -12,7 +12,7 @@ import {
 export const createProduct = async (
   requestBody: CreateProductRequest,
 ): Promise<CreateProductSuccessResponse> => {
-  const { data } = await ducku.post('api/jangter', requestBody);
+  const { data } = await duckuWithAuth.post('api/jangter', requestBody);
   return data;
 };
 
@@ -27,7 +27,10 @@ export const updateProduct = async (
   productId: number,
   requestBody: UpdateProductRequest,
 ): Promise<UpdateProductSuccessResponse> => {
-  const { data } = await ducku.put(`api/jangter/${productId}`, requestBody);
+  const { data } = await duckuWithAuth.put(
+    `api/jangter/${productId}`,
+    requestBody,
+  );
   return data;
 };
 
@@ -38,7 +41,7 @@ export const deleteProduct = async ({
   productId,
   categoryId,
 }: DeleteProductQuery): Promise<deleteProductSuccessResponse> => {
-  const { data } = await ducku.delete(
+  const { data } = await duckuWithAuth.delete(
     `api/jangter/${productId}?categoryId=${categoryId}`,
   );
   return data;
