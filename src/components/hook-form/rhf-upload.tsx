@@ -41,34 +41,22 @@ export function RHFUpload({ name, multiple, helperText, ...other }: Props) {
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState: { error } }) =>
-        multiple ? (
-          <Upload
-            multiple
-            accept={{ 'image/*': [] }}
-            files={field.value}
-            error={!!error}
-            helperText={
-              (!!error || helperText) && (
-                <FormMessage>{error ? error?.message : helperText}</FormMessage>
-              )
-            }
-            {...other}
-          />
-        ) : (
-          <Upload
-            accept={{ 'image/*': [] }}
-            file={field.value}
-            error={!!error}
-            helperText={
-              (!!error || helperText) && (
-                <FormMessage>{error ? error?.message : helperText}</FormMessage>
-              )
-            }
-            {...other}
-          />
-        )
-      }
+      render={({ field, fieldState: { error } }) => (
+        <Upload
+          multiple={multiple}
+          accept={{ 'image/*': [] }}
+          files={multiple ? field.value : undefined}
+          file={!multiple ? field.value : undefined}
+          error={!!error}
+          disabled={!!error}
+          helperText={
+            (!!error || helperText) && (
+              <FormMessage>{error ? error?.message : helperText}</FormMessage>
+            )
+          }
+          {...other}
+        />
+      )}
     />
   );
 }
