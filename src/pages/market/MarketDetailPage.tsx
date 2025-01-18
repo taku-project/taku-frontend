@@ -1,8 +1,15 @@
-import { Bookmark, Heart, LucideShare } from 'lucide-react';
+import {
+  Bookmark,
+  EllipsisVertical,
+  Heart,
+  LucideShare,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -19,8 +26,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 import {
+  cn,
   formatCurrency,
   formatLargeNumber,
   shareCurrentURL,
@@ -36,7 +50,10 @@ const PRODUCT_DETAIL_DUMMY: ProductDetail = {
   status: 'ACTIVE',
   createdAt: '3시간 전',
   viewCount: 56,
-  imageUrlList: ['https://picsum.photos/200', 'https://picsum.photos/100'],
+  imageUrlList: [
+    'https://fastly.picsum.photos/id/64/200/200.jpg?hmac=lJVbDn4h2axxkM72s1w8X1nQxUS3y7li49cyg0tQBZU',
+    'https://picsum.photos/200',
+  ],
 };
 
 const MarketDetailPage = () => {
@@ -47,6 +64,7 @@ const MarketDetailPage = () => {
   const handleLike = () => {
     console.log('하트');
   };
+  const isOwnPost = true;
   const { title, description, price, createdAt, viewCount, imageUrlList } =
     PRODUCT_DETAIL_DUMMY;
 
@@ -54,7 +72,7 @@ const MarketDetailPage = () => {
     <div className="mx-auto w-full max-w-[1240px] py-20">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <section>
-          <div className="h-auto">
+          <div className="h-auto w-full">
             <Carousel className="w-full">
               <CarouselContent>
                 {imageUrlList &&
@@ -81,25 +99,63 @@ const MarketDetailPage = () => {
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <h1 className="text-3xl font-bold">{title}</h1>
-              <Button variant={'ghost'} onClick={handleLike} className="p-2">
-                <Bookmark
-                  width={40}
-                  height={40}
-                  fill="#facc15"
-                  className="h-10 w-10 text-yellow-400"
-                />
-              </Button>
+              <div className="flex gap-2">
+                {isOwnPost && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <div
+                        className={cn(
+                          buttonVariants({ variant: 'ghost' }),
+                          'h-10 w-10 rounded-full',
+                        )}
+                      >
+                        <EllipsisVertical />
+                      </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onClick={() => {}}
+                        className="cursor-pointer"
+                      >
+                        <Pencil />
+                        수정
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {}}
+                        className="cursor-pointer"
+                      >
+                        <Trash2 />
+                        삭제
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+
+                <Button
+                  variant={'ghost'}
+                  onClick={handleLike}
+                  className="h-10 w-10 rounded-full"
+                >
+                  <Bookmark fill="#facc15" className="text-yellow-400" />
+                </Button>
+              </div>
             </div>
-            <h2 className="text-[#B0B3BA]">{createdAt}</h2>
+            <h2 className="text-gray-400">{createdAt}</h2>
             <div className="flex gap-2">
               <Link to={'/'}>
-                <Badge variant={'outline'}>카테고리1</Badge>
+                <Badge variant={'outline'} className="hover:bg-accent">
+                  카테고리1
+                </Badge>
               </Link>
               <Link to={'/'}>
-                <Badge variant={'outline'}>카테고리2</Badge>
+                <Badge variant={'outline'} className="hover:bg-accent">
+                  카테고리2
+                </Badge>
               </Link>
               <Link to={'/'}>
-                <Badge variant={'outline'}>카테고리3</Badge>
+                <Badge variant={'outline'} className="hover:bg-accent">
+                  카테고리3
+                </Badge>
               </Link>
             </div>
             <h3 className="mt-2 text-2xl font-bold">
@@ -115,7 +171,11 @@ const MarketDetailPage = () => {
             </span>
           </div>
           <div className="flex items-center justify-between gap-4">
-            <Button variant={'ghost'} onClick={handleLike}>
+            <Button
+              variant={'ghost'}
+              onClick={handleLike}
+              className="h-10 w-10 rounded-full"
+            >
               <Heart fill="#ef4444" className="text-red-500" />
             </Button>
             <Button onClick={handleChat} className="w-full">
