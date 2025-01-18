@@ -2,7 +2,7 @@ import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const ProductDetailSkeleton = () => (
-  <div className="mx-auto w-full max-w-[1240px] py-20">
+  <div className="mx-auto w-full max-w-[1240px]">
     <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
       <section>
         <div className="h-auto w-full">

@@ -34,6 +34,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
+
 import {
   cn,
   formatCurrency,
@@ -74,17 +75,20 @@ const MarketDetailPage = () => {
   const isOwnPost = true;
 
   return (
-    <div className="mx-auto w-full max-w-[1240px] py-20">
+    <div className="mx-auto w-full max-w-[1240px]">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <section>
-          <div className="h-auto w-full">
+          <div>
             {imageUrlList && !!imageUrlList.length && (
-              <Carousel className="w-full">
+              <Carousel>
                 <CarouselContent>
                   {imageUrlList.map((imageUrl, index) => (
-                    <CarouselItem key={imageUrl}>
+                    <CarouselItem
+                      key={imageUrl}
+                      className="relative aspect-square w-full"
+                    >
                       <img
-                        className="h-full w-full object-cover"
+                        className="absolute inset-0 object-cover"
                         src={imageUrl}
                         alt={`${index}번째 상품 이미지`}
                       />
