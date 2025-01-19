@@ -30,9 +30,9 @@ const Replies = ({ replies }: RepliesProps) => {
         </Button>
       )}
       {replieOpen && (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex w-full flex-col gap-2">
           {replies.map((reply) => (
-            <li key={reply.id} className="flex justify-between gap-2">
+            <li key={reply.id} className="flex w-full justify-between gap-2">
               <div className="flex gap-2">
                 <Avatar className="h-6 w-6">
                   <AvatarImage src={'https://github.com/shadcn.png'} />

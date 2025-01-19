@@ -16,8 +16,6 @@ type CommentItemProps = {
 export const SAME_USER = true;
 
 const CommentItem = ({ comment }: CommentItemProps) => {
-  console.log('comment', comment);
-
   const [openCommentForm, setOpenCommentForm] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
