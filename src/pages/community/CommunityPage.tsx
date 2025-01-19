@@ -1,149 +1,100 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ChevronDown, Search, Star } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import {
+  keepPreviousData,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  Star,
+} from 'lucide-react';
 
-import { RHFUpload } from '@/components/hook-form/rhf-upload';
+import CategoryDialog from '@/components/category/CategoryDialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from '@/components/ui/pagination';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Textarea } from '@/components/ui/textarea';
 import SectionLayout from '@/layout/SectionLayout';
+import { testAxios } from '@/lib/axiosInstance';
 
-const TEST_TOKEN = import.meta.env.ACCESS_TOKEN;
+// https://api-duckwho.xyz/api/category?page=0&size=20&sort=name%2Casc&name
 
-const addPostsSchema = z.object({
-  title: z.string().nonempty('제목을 입력해주세요.'),
-  categoryId: z.number().int().nonnegative('카테고리를 선택해주세요.'),
-  content: z.string().nonempty('내용을 입력해주세요.'),
-  multiUpload: z.array(
-    z.object({
-      preview: z.string(),
-      name: z.string(),
-      size: z.number(),
-      type: z.string(),
-    }),
-  ),
-});
-
-const CommunityPage = () => {
-  // 필터링을 위한 상태
-  // const [filterArray, setFilterArray] = useState([
-  //   {
-  //     key: 'latest',
-  //     name: '최신순',
-  //   },
-  //   {
-  //     key: 'likes',
-  //     name: '좋아요순',
-  //   },
-  //   {
-  //     key: 'views',
-  //     name: '조회수순',
-  //   },
-  // ]);
-
-  // 선택된 필터 상태
-  // const [selectedFilter, setSelectedFilter] = useState<string>('LATEST');
-
-  // const [selectedPage, setSelectedPage] = useState<number>(1);
-
-  const getPosts = () => {
-    // http://api-duckwho.xyz/api/posts?filter=latest&lastValue=0&limit=20&keyword=string&categoryId=0&asc=true
-
-    const url = 'https://api-duckwho.xyz/api/community/posts';
-    const params: any = {
-      filter: 'LATEST',
-      lastValue: 0,
-      limit: 20,
-      keyword: 'string',
-      categoryId: 0,
-      asc: true,
-    };
-
-    const queryString = new URLSearchParams(params).toString();
-
-    fetch(`${url}?${queryString}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${TEST_TOKEN}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const form = useForm<z.infer<typeof addPostsSchema>>({
-    resolver: zodResolver(addPostsSchema),
-    defaultValues: {
-      title: '',
-      categoryId: 0,
-      content: '',
-      multiUpload: [],
+const getCategory = async (
+  page: number,
+  size = 20,
+  sort: string,
+  name: string,
+) => {
+  const response = await testAxios.get('/api/category', {
+    params: {
+      page,
+      size,
+      sort,
+      name,
     },
   });
+  return response.data;
+};
 
-  const onSubmit = (data: z.infer<typeof addPostsSchema>) => {
-    console.log('123', data);
+const CommunityPage = () => {
+  const quiryClient = useQueryClient();
+
+  const [page, setPage] = useState(0);
+  const sort = 'name,asc';
+  const [search, setSearch] = useState('');
+
+  const { status, data, error, isPlaceholderData } = useQuery({
+    queryKey: ['category', page, 20, sort, search],
+    queryFn: () => getCategory(page, 20, sort, search),
+    placeholderData: keepPreviousData,
+    staleTime: 5000,
+  });
+
+  // Prefetch the next page!
+  useEffect(() => {
+    if (!isPlaceholderData && data?.hasMore) {
+      quiryClient.prefetchQuery({
+        queryKey: ['category', page + 1, 20, sort, search],
+        queryFn: () => getCategory(page + 1, 20, sort, search),
+      });
+    }
+  }, [data, isPlaceholderData, page, quiryClient]);
+
+  if (status === 'pending') {
+    return <div>Loading...</div>;
+  }
+
+  if (status === 'error') {
+    return (
+      <div>
+        Error:
+        {error.message
+          ? error.message
+          : 'An error occurred while fetching data'}
+      </div>
+    );
+  }
+
+  const handleClickPrev = () => {
+    setPage((prev) => Math.max(prev - 1, 0));
   };
 
-  const { setValue, watch } = form;
-  const values = watch();
-
-  const handleDropMultiFile = useCallback(
-    (acceptedFiles: File[]) => {
-      const files = values.multiUpload || [];
-
-      const newFiles = acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        }),
-      );
-
-      setValue('multiUpload', [...files, ...newFiles], {
-        shouldValidate: true,
-      });
-    },
-    [setValue, values.multiUpload],
-  );
-
-  useEffect(() => {
-    getPosts();
-  }, []);
+  const handleClickNext = () => {
+    if (data?.hasMore) {
+      setPage((prev) => prev + 1);
+    }
+  };
 
   return (
     <>
@@ -152,96 +103,8 @@ const CommunityPage = () => {
           <div className="space-y-6 py-4">
             <h1 className="text-2xl font-semibold tracking-tight">커뮤니티</h1>
             <div className="flex h-[120px] flex-col items-center justify-center space-y-2 bg-[#F1F5F9] px-2 py-3">
-              <p className="text-base font-normal">원하는 커뮤니티가 없나요?</p>
-              {/* 버튼 색상 1E3A8A */}
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline" onClick={() => form.reset()}>
-                    커뮤니티 만들기
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="">
-                  <Form {...form}>
-                    <form
-                      id="loginForm"
-                      onSubmit={form.handleSubmit(onSubmit)}
-                      className="space-y-6"
-                    >
-                      <DialogHeader>
-                        <DialogTitle>커뮤니티 만들기</DialogTitle>
-                      </DialogHeader>
-                      <FormField
-                        control={form.control}
-                        name="title"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-base text-[#767676]">
-                              제목
-                            </FormLabel>
-                            <FormControl className="text-[#767676] md:text-base">
-                              <Input placeholder="제목" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="categoryId"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-base text-[#767676]">
-                              카테고리
-                            </FormLabel>
-                            <FormControl className="text-[#767676] md:text-base">
-                              <Input placeholder="카테고리" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="content"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-base text-[#767676]">
-                              내용
-                            </FormLabel>
-                            <FormControl className="text-[#767676] md:text-base">
-                              <Textarea placeholder="내용" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <RHFUpload
-                        multiple
-                        thumbnail
-                        name="multiUpload"
-                        maxSize={3145728}
-                        onDrop={handleDropMultiFile}
-                        onRemove={(inputFile) =>
-                          setValue(
-                            'multiUpload',
-                            values.multiUpload &&
-                              values.multiUpload?.filter(
-                                (file) => file !== inputFile,
-                              ),
-                            { shouldValidate: true },
-                          )
-                        }
-                        onRemoveAll={() =>
-                          setValue('multiUpload', [], { shouldValidate: true })
-                        }
-                      />
-                      <DialogFooter>
-                        <Button type="submit">저장하기</Button>
-                      </DialogFooter>
-                    </form>
-                  </Form>
-                </DialogContent>
-              </Dialog>
+              <p className="text-base font-normal">원하는 카테고리가 없나요?</p>
+              <CategoryDialog />
             </div>
             <hr className="" />
             <div>
@@ -275,7 +138,12 @@ const CommunityPage = () => {
           {/* Search Bar max 560px */}
           <div className="relative mx-auto my-[80px] max-w-[560px]">
             <Search className="absolute right-5 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-            <Input placeholder="검색하기..." className="rounded-full pl-5" />
+            <Input
+              placeholder="검색하기..."
+              className="rounded-full pl-5"
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+            />
           </div>
 
           {/* Popular Categories */}
@@ -286,9 +154,9 @@ const CommunityPage = () => {
                 // hover시 약간 커짐
                 <div
                   key={i}
-                  className="transform space-y-2 transition-transform hover:scale-105"
+                  className="transform cursor-pointer space-y-2 transition-transform hover:scale-105"
                 >
-                  <Card className="aspect-video cursor-pointer bg-[#d3d3d3] transition-opacity hover:opacity-90">
+                  <Card className="aspect-video bg-[#d3d3d3] transition-opacity hover:opacity-90">
                     <CardContent className="h-full p-0" />
                   </Card>
                   <div className="space-y-1">
@@ -304,18 +172,30 @@ const CommunityPage = () => {
           {/* Search Results */}
           <section>
             <h2 className="mb-6 text-xl font-medium">
-              <span className="font-bold text-primary">N</span> 개의 커뮤니티가
-              검색됐덕!
+              <span className="font-bold text-primary">
+                {data.data.totalElements}
+              </span>
+              개의 커뮤니티가 검색됐덕!
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="space-y-2">
+              {data.data.content.map((category: any, i: number) => (
+                <div
+                  key={i}
+                  className="transform cursor-pointer space-y-2 transition-transform hover:scale-105"
+                >
                   <Card className="aspect-video cursor-pointer bg-[#d3d3d3] transition-opacity hover:opacity-90">
                     <CardContent className="h-full p-0" />
                   </Card>
                   <div className="space-y-1">
-                    <h3 className="font-medium">카테고리</h3>
-                    <p className="text-sm text-muted-foreground">장르</p>
+                    <h3 className="font-medium">{category.name}</h3>
+                    {/* 한줄로만 표현하기 나머지 ... */}
+                    <div className="line-clamp-1 flex flex-wrap gap-1 overflow-hidden text-muted-foreground">
+                      {category.genreName.map((genre: any, i: number) => (
+                        <Badge key={i} className="text-sm">
+                          #{genre}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -325,16 +205,40 @@ const CommunityPage = () => {
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious href="#" />
+                  <Button
+                    variant="ghost"
+                    onClick={handleClickPrev}
+                    disabled={page === 0}
+                  >
+                    <ChevronLeft />
+                  </Button>
                 </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">1</PaginationLink>
-                </PaginationItem>
+                {data.data.totalPages &&
+                  (data.data.totalPages > 0 ? (
+                    Array.from({ length: data.data.totalPages }).map((_, i) => (
+                      <PaginationItem>
+                        <Button
+                          key={i}
+                          variant={page === i ? 'outline' : 'ghost'}
+                          size="default"
+                          onClick={() => setPage(i)}
+                        >
+                          {i + 1}
+                        </Button>
+                      </PaginationItem>
+                    ))
+                  ) : (
+                    <Button variant="outline" size="default">
+                      1
+                    </Button>
+                  ))}
                 <PaginationItem>
                   <PaginationEllipsis />
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationNext href="#" />
+                  <Button variant="ghost" onClick={handleClickNext}>
+                    <ChevronRight />
+                  </Button>
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
