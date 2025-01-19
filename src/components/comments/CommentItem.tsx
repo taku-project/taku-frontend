@@ -13,6 +13,7 @@ type CommentItemProps = {
   comment: any;
 };
 
+// TODO: test 용 상수 유저 auth로 추후 변경
 export const SAME_USER = true;
 
 const CommentItem = ({ comment }: CommentItemProps) => {
