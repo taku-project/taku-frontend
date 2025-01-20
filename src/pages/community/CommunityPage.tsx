@@ -163,8 +163,12 @@ const CommunityPage = () => {
                   key={i}
                   className="transform cursor-pointer space-y-2 transition-transform hover:scale-105"
                 >
-                  <Card className="aspect-video cursor-pointer bg-[#d3d3d3] transition-opacity hover:opacity-90">
-                    <CardContent className="h-full p-0" />
+                  <Card className="aspect-video cursor-pointer overflow-hidden rounded bg-[#d3d3d3] transition-opacity hover:opacity-90">
+                    <img
+                      src={category.imageUrl}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
                   </Card>
                   <div className="space-y-1">
                     <h3 className="font-medium">{category.name}</h3>
