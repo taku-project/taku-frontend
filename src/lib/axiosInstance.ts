@@ -7,14 +7,14 @@ const ducku = axios.create({
   },
 });
 
-const duckuWithAuth = axios.create({
+const duckuWithAuthJSON = axios.create({
   baseURL: 'https://api-duckwho.xyz',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-duckuWithAuth.interceptors.request.use((config) => {
+duckuWithAuthJSON.interceptors.request.use((config) => {
   const token = import.meta.env.VITE_KAKAO_ACESS_TOKEN;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -22,4 +22,19 @@ duckuWithAuth.interceptors.request.use((config) => {
   return config;
 });
 
-export { ducku, duckuWithAuth };
+const duckuWithAuthFormData = axios.create({
+  baseURL: 'https://api-duckwho.xyz',
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+});
+
+duckuWithAuthFormData.interceptors.request.use((config) => {
+  const token = import.meta.env.VITE_KAKAO_ACESS_TOKEN;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export { ducku, duckuWithAuthFormData, duckuWithAuthJSON };
