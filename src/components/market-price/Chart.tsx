@@ -75,6 +75,7 @@ export const Chart = ({ data, period }: ChartProps) => {
 
       // 기간에 따른 날짜 포맷 변경
       const formatLabel = (point: any) => {
+        // TODO: 타입 정의 필요
         if (period === '1일') {
           // 시간 포맷 (HH:00)
           return `${point.date[3].toString().padStart(2, '0')}:00`;
@@ -89,13 +90,13 @@ export const Chart = ({ data, period }: ChartProps) => {
         datasets: [
           {
             label: '판매가',
-            data: dataPoints.map((point: any) => point.registeredPrice),
+            data: dataPoints.map((point: any) => point.registeredPrice), // TODO: 타입 정의 필요
             borderColor: 'rgb(59, 130, 246)',
             backgroundColor: 'rgba(59, 130, 246, 0.5)',
           },
           {
             label: '구매가',
-            data: dataPoints.map((point: any) => point.soldPrice),
+            data: dataPoints.map((point: any) => point.soldPrice), // TODO: 타입 정의 필요
             borderColor: 'rgb(239, 68, 68)',
             backgroundColor: 'rgba(239, 68, 68, 0.5)',
           },
