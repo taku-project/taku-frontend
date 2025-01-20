@@ -16,7 +16,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import SectionLayout from '@/layout/SectionLayout';
 import { testAxios } from '@/lib/axiosInstance';
 
-import PaginationComponent from '../custom-pagination/CustomPagination';
+import PaginationComponent from '../../components/custom-pagination/CustomPagination';
 
 // https://api-duckwho.xyz/api/category?page=0&size=20&sort=name%2Casc&name
 
@@ -175,7 +175,11 @@ const CommunityPage = () => {
                     {/* 한줄로만 표현하기 나머지 ... */}
                     <div className="line-clamp-1 flex flex-wrap gap-1 overflow-hidden text-muted-foreground">
                       {category.genreName.map((genre: any, i: number) => (
-                        <Badge key={i} className="text-sm">
+                        <Badge
+                          key={i}
+                          className="text-sm"
+                          variant={'secondary'}
+                        >
                           #{genre}
                         </Badge>
                       ))}
@@ -187,9 +191,9 @@ const CommunityPage = () => {
           </section>
           <div className="my-8">
             <PaginationComponent
-              count={data.data.totalPages}
-              setPage={setPage}
-              page={page}
+              totalPages={data.data.totalPages}
+              setCurrentPage={setPage}
+              currentPage={page}
             />
           </div>
         </SectionLayout>
