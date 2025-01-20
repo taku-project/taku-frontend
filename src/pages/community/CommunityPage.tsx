@@ -91,9 +91,7 @@ const CommunityPage = () => {
   };
 
   const handleClickNext = () => {
-    if (data?.hasMore) {
-      setPage((prev) => prev + 1);
-    }
+    setPage((prev) => prev + 1);
   };
 
   return (
