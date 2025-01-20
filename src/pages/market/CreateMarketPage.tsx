@@ -25,39 +25,53 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { CATEGORY_MAP } from '@/constants/jangter';
+import { useCreateProduct } from '@/queries/jangter';
 
-const CreateMarketPage = () => {
-  const addProductSchema = z.object({
-    categoryId: z.string().transform((val) => {
+const addProductSchema = z.object({
+  categoryId: z.string().transform((val) => {
+    const numberValue = parseFloat(val);
+    if (isNaN(numberValue)) {
+      throw new Error('가격은 숫자로 입력해주세요.');
+    }
+    return numberValue;
+  }),
+  title: z.string().nonempty('제목을 입력해주세요.'),
+  description: z.string().nonempty('상품 정보를 입력해주세요.'),
+  price: z
+    .string()
+    .transform((val) => {
       const numberValue = parseFloat(val);
       if (isNaN(numberValue)) {
         throw new Error('가격은 숫자로 입력해주세요.');
       }
       return numberValue;
+    })
+    .refine((val) => val > 0, { message: '가격은 0보다 커야 합니다.' }),
+  imageList: z
+    .array(
+      z.object({
+        preview: z.string(),
+        name: z.string(),
+        size: z.number(),
+        type: z.string(),
+      }),
+    )
+    .max(5, '이미지는 최대 5개 까지 업로드 가능합니다.')
+    .optional()
+    .transform((imageObjects) => {
+      if (!imageObjects) return undefined;
+      return imageObjects.map((imageObj) => {
+        const file = new File([], imageObj.name, {
+          type: imageObj.type,
+          lastModified: Date.now(),
+        });
+        return Object.assign(file, { preview: imageObj.preview });
+      });
     }),
-    title: z.string().nonempty('제목을 입력해주세요.'),
-    description: z.string().nonempty('상품 정보를 입력해주세요.'),
-    price: z
-      .string()
-      .transform((val) => {
-        const numberValue = parseFloat(val);
-        if (isNaN(numberValue)) {
-          throw new Error('가격은 숫자로 입력해주세요.');
-        }
-        return numberValue;
-      })
-      .refine((val) => val > 0, { message: '가격은 0보다 커야 합니다.' }),
-    multiUpload: z
-      .array(
-        z.object({
-          preview: z.string(),
-          name: z.string(),
-          size: z.number(),
-          type: z.string(),
-        }),
-      )
-      .max(5, '이미지는 최대 5개 까지 업로드 가능합니다.'),
-  });
+});
+
+const CreateMarketPage = () => {
+  const { mutate } = useCreateProduct();
 
   const form = useForm<z.infer<typeof addProductSchema>>({
     mode: 'onBlur',
@@ -66,7 +80,7 @@ const CreateMarketPage = () => {
       title: '',
       price: 0,
       description: '',
-      multiUpload: [],
+      imageList: undefined,
     },
   });
   const { setValue, watch, handleSubmit } = form;
@@ -74,7 +88,7 @@ const CreateMarketPage = () => {
 
   const handleDropMultiFile = useCallback(
     (acceptedFiles: File[]) => {
-      const files = values.multiUpload || [];
+      const files = values.imageList || [];
 
       const newFiles = acceptedFiles.map((file) =>
         Object.assign(file, {
@@ -82,15 +96,16 @@ const CreateMarketPage = () => {
         }),
       );
 
-      setValue('multiUpload', [...files, ...newFiles], {
+      setValue('imageList', [...files, ...newFiles], {
         shouldValidate: true,
       });
     },
-    [setValue, values.multiUpload],
+    [setValue, values.imageList],
   );
 
   const onSubmit = (data: z.infer<typeof addProductSchema>) => {
     console.log(data);
+    mutate(data);
   };
 
   return (
@@ -190,19 +205,19 @@ const CreateMarketPage = () => {
             <RHFUpload
               multiple
               thumbnail
-              name="multiUpload"
+              name="imageList"
               maxSize={3145728}
               onDrop={handleDropMultiFile}
               onRemove={(inputFile) =>
                 setValue(
-                  'multiUpload',
-                  values.multiUpload &&
-                    values.multiUpload?.filter((file) => file !== inputFile),
+                  'imageList',
+                  values.imageList &&
+                    values.imageList?.filter((file) => file !== inputFile),
                   { shouldValidate: true },
                 )
               }
               onRemoveAll={() =>
-                setValue('multiUpload', [], { shouldValidate: true })
+                setValue('imageList', [], { shouldValidate: true })
               }
             />
           </div>
