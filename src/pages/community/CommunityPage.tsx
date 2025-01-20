@@ -5,28 +5,18 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  Star,
-} from 'lucide-react';
+import { ChevronDown, Search, Star } from 'lucide-react';
 
 import CategoryDialog from '@/components/category/CategoryDialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-} from '@/components/ui/pagination';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import SectionLayout from '@/layout/SectionLayout';
 import { testAxios } from '@/lib/axiosInstance';
+
+import PaginationComponent from '../custom_pagination/custom-pagination';
 
 // https://api-duckwho.xyz/api/category?page=0&size=20&sort=name%2Casc&name
 
@@ -85,14 +75,6 @@ const CommunityPage = () => {
       </div>
     );
   }
-
-  const handleClickPrev = () => {
-    setPage((prev) => Math.max(prev - 1, 0));
-  };
-
-  const handleClickNext = () => {
-    setPage((prev) => prev + 1);
-  };
 
   return (
     <>
@@ -199,47 +181,12 @@ const CommunityPage = () => {
               ))}
             </div>
           </section>
-          <div className="mt-12">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <Button
-                    variant="ghost"
-                    onClick={handleClickPrev}
-                    disabled={page === 0}
-                  >
-                    <ChevronLeft />
-                  </Button>
-                </PaginationItem>
-                {data.data.totalPages &&
-                  (data.data.totalPages > 0 ? (
-                    Array.from({ length: data.data.totalPages }).map((_, i) => (
-                      <PaginationItem>
-                        <Button
-                          key={i}
-                          variant={page === i ? 'outline' : 'ghost'}
-                          size="default"
-                          onClick={() => setPage(i)}
-                        >
-                          {i + 1}
-                        </Button>
-                      </PaginationItem>
-                    ))
-                  ) : (
-                    <Button variant="outline" size="default">
-                      1
-                    </Button>
-                  ))}
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <Button variant="ghost" onClick={handleClickNext}>
-                    <ChevronRight />
-                  </Button>
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+          <div className="my-8">
+            <PaginationComponent
+              count={data.data.totalPages}
+              setPage={setPage}
+              page={page}
+            />
           </div>
         </SectionLayout>
         <aside className="w-[260px] bg-background">
