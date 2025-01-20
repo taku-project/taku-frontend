@@ -24,8 +24,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
-import { RHFUpload } from '../hook-form/rhf-upload';
-import { MultiSelect } from '../multiSelect/multi-select';
+import { RHFUpload } from '../hook-form/RhfUpload';
+import { MultiSelect } from '../multi-select/MultiSelect';
 
 const addCategorySchema = z.object({
   title: z.string().nonempty('제목을 입력해주세요.'),

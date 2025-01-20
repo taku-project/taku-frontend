@@ -2,9 +2,9 @@ import { ImageUp, X } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 
 import { Button } from '../ui/button';
-import RejectionFiles from './errors-rejection-files.tsx';
-import MultiFilePreview from './preview-multi-file.tsx';
-import SingleFilePreview from './preview-single-file.tsx';
+import RejectionFiles from './ErrorsRejectionFiles.tsx';
+import MultiFilePreview from './PreviewMultiFile.tsx';
+import SingleFilePreview from './PreviewSingleFile.tsx';
 import { UploadProps } from './types';
 
 // ----------------------------------------------------------------------

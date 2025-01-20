@@ -16,7 +16,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import SectionLayout from '@/layout/SectionLayout';
 import { testAxios } from '@/lib/axiosInstance';
 
-import PaginationComponent from '../custom_pagination/custom-pagination';
+import PaginationComponent from '../custom-pagination/CustomPagination';
 
 // https://api-duckwho.xyz/api/category?page=0&size=20&sort=name%2Casc&name
 
