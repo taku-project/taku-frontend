@@ -12,9 +12,13 @@ import { operations } from './apiSchema.types';
  *
  */
 
-export type CreateProductRequest = NonNullable<
+type CreateProduct = NonNullable<
   operations['createProduct']['requestBody']
 >['content']['multipart/form-data'];
+
+export interface CreateProductRequest extends CreateProduct {
+  imageList?: File[];
+}
 export type CreateProductSuccessResponse =
   operations['createProduct']['responses'][201]['content']['*/*'];
 
