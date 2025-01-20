@@ -1,4 +1,4 @@
-import { CommonResponse } from './common';
+import { CommonResponse } from './common.types';
 
 export type WeeklyStats = {
   averagePrice?: number;
