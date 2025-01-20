@@ -25,7 +25,7 @@ ChartJS.register(
 
 interface ChartProps {
   data: any; // TODO: 타입 정의 필요
-  period: '1일' | '1주일';
+  period: string;
 }
 
 export const Chart = ({ data, period }: ChartProps) => {
