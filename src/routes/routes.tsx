@@ -34,6 +34,10 @@ const MyPage = lazy(() => import('@/pages/mypage/MyPage'));
 const CreateShortsPage = lazy(() => import('@/pages/shorts/CreateShortsPage'));
 const ShortsPage = lazy(() => import('@/pages/shorts/ShortsPage'));
 
+// 채팅 관련 컴포넌트 lazy 로딩
+const ChatListPage = lazy(() => import('@/pages/chat/ChatListPage'));
+const ChatDetailPage = lazy(() => import('@/pages/chat/ChatDetailPage'));
+
 export const routes = [
   {
     element: (
@@ -71,6 +75,10 @@ export const routes = [
       { path: '/shorts', element: <ShortsPage /> },
       { path: '/shorts/add', element: <CreateShortsPage /> },
       { path: '/mypage', element: <MyPage /> },
+
+      // 채팅 관련 라우트 추가
+      { path: '/chat', element: <ChatListPage /> }, // 채팅방 목록
+      { path: '/chat/:roomId', element: <ChatDetailPage /> }, // 개별 채팅방
     ],
   },
 ];
