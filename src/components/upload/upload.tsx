@@ -24,6 +24,7 @@ export default function Upload({
   onRemoveAll,
   ...other
 }: UploadProps) {
+  // useDropzone 훅을 사용하여 드롭존 관련 속성 및 상태를 가져옴
   const {
     getRootProps,
     getInputProps,
@@ -36,12 +37,16 @@ export default function Upload({
     ...other,
   });
 
+  // 단일 파일이 있는지 여부를 확인
   const hasFile = !!file && !multiple;
 
+  // 다중 파일이 있는지 여부를 확인
   const hasFiles = !!files && multiple && !!files.length;
 
+  // 드래그 거부 또는 에러가 있는지 여부를 확인
   const hasError = isDragReject || !!error;
 
+  // 파일이 없을 때 표시할 플레이스홀더 렌더링
   const renderPlaceholder = (
     <div className="flex flex-col flex-wrap items-center justify-center gap-3">
       <ImageUp color="#EAB308" size={40} />
@@ -53,12 +58,14 @@ export default function Upload({
     </div>
   );
 
+  // 단일 파일 미리보기를 렌더링
   const renderSinglePreview = (
     <SingleFilePreview
       imgUrl={typeof file === 'string' ? file : file?.preview}
     />
   );
 
+  // 단일 파일 미리보기 제거 버튼 렌더링
   const removeSinglePreview = hasFile && onDelete && (
     <Button
       size="icon"
@@ -69,6 +76,7 @@ export default function Upload({
     </Button>
   );
 
+  // 다중 파일 미리보기를 렌더링
   const renderMultiPreview = hasFiles && (
     <>
       <div className="my-2 flex flex-wrap items-center gap-2">
@@ -89,6 +97,7 @@ export default function Upload({
     </>
   );
 
+  // 컴포넌트 렌더링
   return (
     <div className="relative w-full">
       <div
