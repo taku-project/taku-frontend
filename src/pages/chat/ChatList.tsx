@@ -9,8 +9,7 @@ interface ChatRoom {
   timestamp: string;
   unreadCount: number;
 }
-
-const ChatListPage = () => {
+export const ChatList = () => {
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
   const navigate = useNavigate();
   const { roomId } = useParams();
@@ -34,9 +33,8 @@ const ChatListPage = () => {
       },
     ]);
   }, []);
-
   return (
-    <div className="h-screen w-80 border-r border-border/50 bg-card p-6">
+    <div className="flex min-w-[320px] flex-col border-r border-border/50 bg-card p-6">
       <div className="mb-6 border-b border-border/50 pb-4">
         <h2 className="text-xl font-semibold text-foreground">메시지</h2>
       </div>
@@ -76,5 +74,3 @@ const ChatListPage = () => {
     </div>
   );
 };
-
-export default ChatListPage;
