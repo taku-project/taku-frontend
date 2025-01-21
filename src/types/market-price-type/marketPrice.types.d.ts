@@ -32,3 +32,5 @@ export type MarketPriceProps = {
   stats: WeeklyStats;
   products: SimilarProduct[];
 };
+
+export type Period = '1일' | '1주일';

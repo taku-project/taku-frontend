@@ -4,10 +4,13 @@ import { Chart } from '@/components/market-price/Chart';
 import { PriceList } from '@/components/market-price/PriceList';
 import { RecentlyTradedProduct } from '@/components/market-price/RecentlyTradedProduct';
 import { RelatedProduct } from '@/components/market-price/RelatedProduct';
-import { MarketPriceSearchResponse } from '@/types/market-price-type/marketPrice.types';
+import {
+  MarketPriceSearchResponse,
+  Period,
+} from '@/types/market-price-type/marketPrice.types';
 
 const MarketPricePage = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState<string>('1일');
+  const [selectedPeriod, setSelectedPeriod] = useState<Period>('1일');
 
   // Mock 데이터
   const dailyMockData: MarketPriceSearchResponse = {
@@ -130,7 +133,7 @@ const MarketPricePage = () => {
     <div className="flex flex-col space-y-8">
       <PriceList
         selectedPeriod={selectedPeriod}
-        setSelectedPeriod={setSelectedPeriod}
+        setSelectedPeriod={(period) => setSelectedPeriod(period as Period)}
         priceData={selectedPeriod === '1일' ? dailyMockData : weeklyMockData}
       />
       <Chart
