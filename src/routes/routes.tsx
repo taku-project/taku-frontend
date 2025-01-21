@@ -35,8 +35,8 @@ const CreateShortsPage = lazy(() => import('@/pages/shorts/CreateShortsPage'));
 const ShortsPage = lazy(() => import('@/pages/shorts/ShortsPage'));
 
 // 채팅 관련 컴포넌트 lazy 로딩
-const ChatListPage = lazy(() => import('@/pages/chat/ChatListPage'));
-const ChatDetailPage = lazy(() => import('@/pages/chat/ChatDetailPage'));
+const ChatPage = lazy(() => import('@/pages/chat/ChatPage'));
+const ChatRoom = lazy(() => import('@/pages/chat/ChatRoom'));
 
 export const routes = [
   {
@@ -76,9 +76,23 @@ export const routes = [
       { path: '/shorts/add', element: <CreateShortsPage /> },
       { path: '/mypage', element: <MyPage /> },
 
-      // 채팅 관련 라우트 추가
-      { path: '/chat', element: <ChatListPage /> }, // 채팅방 목록
-      { path: '/chat/:roomId', element: <ChatDetailPage /> }, // 개별 채팅방
+      // 채팅 관련 라우트
+      {
+        path: '/chat',
+        element: <ChatPage />,
+        children: [
+          {
+            path: ':roomId',
+            element: (
+              <Suspense
+                fallback={<LoadingScreen message="채팅방 불러오는 중" />}
+              >
+                <ChatRoom />
+              </Suspense>
+            ),
+          },
+        ],
+      },
     ],
   },
 ];
