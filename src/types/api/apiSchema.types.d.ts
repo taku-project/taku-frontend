@@ -1592,7 +1592,8 @@ export interface components {
       /** Format: int64 */
       id?: number;
       name?: string;
-      createdType?: string;
+      /** @enum {string} */
+      createdType?: 'USER' | 'ADMIN' | 'BLACKLIST';
       /** @enum {string} */
       status?: 'ACTIVE' | 'INACTIVE' | 'PENDING';
       /** Format: int64 */
@@ -1678,7 +1679,8 @@ export interface components {
       nickname?: string;
       providerType?: string;
       profileImg?: string;
-      status?: string;
+      /** @enum {string} */
+      status?: 'ACTIVE' | 'INACTIVE';
       domesticId?: string;
       gender?: string;
       ageRange?: string;
@@ -1686,7 +1688,8 @@ export interface components {
       createdAt?: string;
       /** Format: date-time */
       updatedAt?: string;
-      role?: string;
+      /** @enum {string} */
+      role?: 'USER' | 'ADMIN' | 'BLACKLIST';
       email?: string;
       posts?: components['schemas']['Post'][];
     };
@@ -1725,10 +1728,6 @@ export interface components {
       data?: components['schemas']['ChatRoomResponseDTO'][];
       error?: components['schemas']['ExceptionDto'];
     };
-    RequestCategorySearch: {
-      name?: string;
-      genreIds?: number[];
-    };
     CommonResponsePageResponseCategorySeachDTO: {
       success?: boolean;
       data?: components['schemas']['PageResponseCategorySeachDTO'];
@@ -1746,10 +1745,10 @@ export interface components {
       number?: number;
       sort?: components['schemas']['SortObject'];
       pageable?: components['schemas']['PageableObject'];
-      first?: boolean;
-      last?: boolean;
       /** Format: int32 */
       numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
       empty?: boolean;
     };
     PageableObject: {
@@ -1816,10 +1815,10 @@ export interface components {
       number?: number;
       sort?: components['schemas']['SortObject'];
       pageable?: components['schemas']['PageableObject'];
-      first?: boolean;
-      last?: boolean;
       /** Format: int32 */
       numberOfElements?: number;
+      first?: boolean;
+      last?: boolean;
       empty?: boolean;
     };
     ProfannityResponseDTO: {
@@ -3054,9 +3053,7 @@ export interface operations {
   };
   searchCategories: {
     parameters: {
-      query: {
-        requestCategorySearch: components['schemas']['RequestCategorySearch'];
-        pageable: components['schemas']['Pageable'];
+      query?: {
         /** @description 페이지 번호 (0부터 시작) */
         page?: number;
         /** @description 페이지 크기 */
