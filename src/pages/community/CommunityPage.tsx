@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { ChevronDown, Search, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import CategoryDialog from '@/components/category/CategoryDialog';
 import { Badge } from '@/components/ui/badge';
@@ -37,8 +38,25 @@ const getCategory = async (
   return response.data;
 };
 
+type Category = {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  status: string;
+  viewCount: number;
+  categoryCreateUserId: number;
+  categoryCreateNickname: string;
+  categoryCreateUserProfileImageUrl: string;
+  imageId: number;
+  imageUrl: string;
+  genreId: number[];
+  genreName: string[];
+};
+
 const CommunityPage = () => {
   const quiryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [page, setPage] = useState(0);
   const sort = 'name,asc';
@@ -62,19 +80,25 @@ const CommunityPage = () => {
   }, [data, isPlaceholderData, page, quiryClient]);
 
   if (status === 'pending') {
-    return <div>Loading...</div>;
+    return <div>로딩중...</div>;
   }
 
   if (status === 'error') {
     return (
       <div>
-        Error:
+        에러:
         {error.message
           ? error.message
-          : 'An error occurred while fetching data'}
+          : '데이터를 가져오는 중 오류가 발생했습니다'}
       </div>
     );
   }
+
+  // 숫자 순차정렬
+  const numArr = [2, 12, 7, 9, 16, 13, 24, 21, 11, 15];
+
+  numArr.sort((a, b) => a - b);
+  console.log('numArr', numArr);
 
   return (
     <>
@@ -158,19 +182,23 @@ const CommunityPage = () => {
               개의 커뮤니티가 검색됐덕!
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {data.data.content.map((category: any, i: number) => (
+              {data.data.content.map((category: Category, i: number) => (
                 <div
                   key={i}
                   className="transform cursor-pointer space-y-2 transition-transform hover:scale-105"
+                  onClick={() => {
+                    navigate(`/community/${category.id}`);
+                  }}
                 >
                   <Card className="aspect-video cursor-pointer overflow-hidden rounded bg-[#d3d3d3] transition-opacity hover:opacity-90">
                     <img
                       src={category.imageUrl}
-                      alt=""
+                      alt={category.name}
                       className="h-full w-full object-cover"
                     />
                   </Card>
                   <div className="space-y-1">
+                    <p>{category.id}</p>
                     <h3 className="font-bold">{category.name}</h3>
                     {/* 한줄로만 표현하기 나머지 ... */}
                     <div className="line-clamp-1 flex flex-wrap gap-1 overflow-hidden text-muted-foreground">
