@@ -44,8 +44,32 @@ export function RHFUploadAvatar({ name, ...other }: Props) {
  *
  * @returns {JSX.Element} 파일 업로드 컴포넌트를 반환합니다.
  */
-export function RHFUpload({ name, multiple, helperText, ...other }: Props) {
-  const { control } = useFormContext();
+export function RHFUpload({
+  name,
+  multiple,
+  helperText,
+  deleteImageListName,
+  imageUrlList,
+  ...other
+}: Props & { deleteImageListName?: string; imageUrlList?: string[] }) {
+  const { control, setValue, watch } = useFormContext();
+
+  // 삭제된 이미지 URL을 관리하는 array
+  const deleteImageUrlList = watch(deleteImageListName || '') || [];
+
+  // 토글 방식으로 삭제/복구 관리
+  const handleDeleteImageUrl = (url: string) => {
+    // 삭제된 이미지를 deleteImageList에 추가
+    if (!deleteImageListName) {
+      console.error('deleteImageListName is undefined');
+      return;
+    }
+
+    const updatedList = [...new Set(deleteImageUrlList), url];
+
+    // react-hook-form 상태 동기화
+    setValue(deleteImageListName, updatedList);
+  };
 
   return (
     <Controller
@@ -64,6 +88,11 @@ export function RHFUpload({ name, multiple, helperText, ...other }: Props) {
               <FormMessage>{error ? error?.message : helperText}</FormMessage>
             )
           }
+          {...(deleteImageListName && {
+            imageUrlList: imageUrlList, // 수정 폼에서 preview로 보여줄 URL 리스트
+            onDeleteImageUrl: handleDeleteImageUrl, // 기존 이미지 삭제 요청 함수
+            deleteImageUrlList: deleteImageUrlList,
+          })}
           {...other}
         />
       )}

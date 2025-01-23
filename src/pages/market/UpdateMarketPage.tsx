@@ -71,6 +71,7 @@ const addProductSchema = z.object({
         return Object.assign(file, { preview: imageObj.preview });
       });
     }),
+  deleteImageUrl: z.array(z.string()),
 });
 type ProductDetail = Exclude<
   FindProductDetailSuccessResponse['data'],
@@ -92,7 +93,7 @@ const UpdateMarketPage = () => {
 
   const { data: productDetailData } = data as ProductDetailResponse;
 
-  const { title, description, price } = productDetailData;
+  const { title, description, price, imageUrlList } = productDetailData;
 
   const form = useForm<z.infer<typeof addProductSchema>>({
     mode: 'onBlur',
@@ -102,6 +103,7 @@ const UpdateMarketPage = () => {
       price,
       description,
       imageList: undefined,
+      deleteImageUrl: [],
     },
   });
   const { setValue, watch, handleSubmit } = form;
@@ -126,7 +128,7 @@ const UpdateMarketPage = () => {
 
   const onSubmit = (data: z.infer<typeof addProductSchema>) => {
     console.log(data);
-    mutate(data);
+    // mutate(data);
   };
 
   return (
@@ -240,6 +242,8 @@ const UpdateMarketPage = () => {
               onRemoveAll={() =>
                 setValue('imageList', [], { shouldValidate: true })
               }
+              deleteImageListName={'deleteImageUrl'}
+              imageUrlList={imageUrlList}
             />
           </div>
           <Button type="submit" className="float-right">

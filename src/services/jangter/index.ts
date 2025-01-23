@@ -9,7 +9,6 @@ import {
   FindProductDetailSuccessResponse,
   UpdateProductRequest,
   UpdateProductSuccessResponse,
-  deleteProductQuery,
   deleteProductSuccessResponse,
 } from '@/types/api/jangter.types';
 
@@ -38,15 +37,9 @@ export const updateProduct = async (
   return data;
 };
 
-interface DeleteProductQuery extends deleteProductQuery {
-  productId: number;
-}
-export const deleteProduct = async ({
-  productId,
-  categoryId,
-}: DeleteProductQuery): Promise<deleteProductSuccessResponse> => {
-  const { data } = await duckuWithAuthJSON.delete(
-    `api/jangter/${productId}?categoryId=${categoryId}`,
-  );
+export const deleteProduct = async (
+  productId: number,
+): Promise<deleteProductSuccessResponse> => {
+  const { data } = await duckuWithAuthJSON.delete(`api/jangter/${productId}`);
   return data;
 };
