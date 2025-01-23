@@ -5,6 +5,7 @@ import {
   Loader,
   LucideShare,
   Pencil,
+  Plus,
   Trash2,
 } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
@@ -124,7 +125,7 @@ const MarketDetailPage = () => {
                       className="relative aspect-square w-full"
                     >
                       <img
-                        className="absolute inset-0 object-cover"
+                        className="absolute inset-0 h-full w-full object-cover"
                         src={imageUrl}
                         alt={`${index}번째 상품 이미지`}
                       />
@@ -249,7 +250,20 @@ const MarketDetailPage = () => {
           )}
         </div>
       </section>
-      <Separator className="my-16" />
+      <div className="group fixed bottom-10 right-10">
+        <Link to={'/market/add'}>
+          <Button
+            asChild
+            className="relative z-20 rounded-full shadow-lg shadow-slate-400 transition-transform duration-300 group-hover:translate-x-8"
+            size={'icon'}
+          >
+            <Plus />
+          </Button>
+          <div className="absolute -right-2 bottom-1/2 z-10 w-[140px] translate-y-1/2 rounded bg-gray-100/50 px-3 py-2 font-bold text-black opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
+            장터 게시글 추가
+          </div>
+        </Link>
+      </div>
     </div>
   );
 };
