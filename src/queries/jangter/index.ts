@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   createProduct,
   getProductDetail,
+  getRecommendedProductDetail,
   updateProduct,
 } from '@/services/jangter';
 import type {
@@ -58,8 +59,18 @@ export const useUpdateteProduct = (productId: number) => {
 
 export const useProductDetails = (productId: number) => {
   return useQuery({
-    queryKey: ['productDetails', productId],
+    queryKey: ['products', productId, 'detail'],
     queryFn: () => getProductDetail(productId),
+    enabled: !!productId,
+    staleTime: 1000 * 60 * 5,
+    retry: 2,
+  });
+};
+
+export const useRecommendedProducts = (productId: number) => {
+  return useQuery({
+    queryKey: ['products', productId, 'recommended'],
+    queryFn: () => getRecommendedProductDetail(productId),
     enabled: !!productId,
     staleTime: 1000 * 60 * 5,
     retry: 2,

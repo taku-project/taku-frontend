@@ -10,6 +10,7 @@ import {
   UpdateProductRequest,
   UpdateProductSuccessResponse,
   deleteProductSuccessResponse,
+  findRecommendedProductSuccessResponse,
 } from '@/types/api/jangter.types';
 
 export const createProduct = async (
@@ -41,5 +42,12 @@ export const deleteProduct = async (
   productId: number,
 ): Promise<deleteProductSuccessResponse> => {
   const { data } = await duckuWithAuthJSON.delete(`api/jangter/${productId}`);
+  return data;
+};
+
+export const getRecommendedProductDetail = async (
+  productId: number,
+): Promise<findRecommendedProductSuccessResponse> => {
+  const { data } = await ducku.get(`api/jangter/${productId}/recommend`);
   return data;
 };

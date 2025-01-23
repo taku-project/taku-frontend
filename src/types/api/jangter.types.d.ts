@@ -1,4 +1,4 @@
-import { operations } from './apiSchema.types';
+import { components, operations } from './apiSchema.types';
 
 /**
  * path: '/api/jangter'
@@ -62,6 +62,19 @@ export type deleteProductQuery =
   operations['deleteProduct']['parameters']['query'];
 export type deleteProductSuccessResponse =
   operations['deleteProduct']['responses'][200]['content']['*/*'];
+
+/**
+ * path: '/api/jangter/{productId}/recommend'
+ */
+
+/**
+ * 판매글 추천
+ * @description 판매글 추천 API (로그인/비로그인 모두 가능)
+ */
+
+export type RecommendedProduct = components['schemas']['RecommendProduct'];
+export type findRecommendedProductSuccessResponse =
+  operations['recommendProduct']['responses'][200]['content']['*/*'];
 
 /**
  * path: '/api/itemCategory'

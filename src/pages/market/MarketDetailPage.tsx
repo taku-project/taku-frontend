@@ -2,6 +2,7 @@ import {
   Bookmark,
   EllipsisVertical,
   Heart,
+  Loader,
   LucideShare,
   Pencil,
   Trash2,
@@ -9,16 +10,9 @@ import {
 import { Link, useParams } from 'react-router-dom';
 
 import { ProductDetailSkeleton } from '@/components/loading/jangter/ProductDetailSkeleton';
+import { RecommendProductCard } from '@/components/market/RecommendProductCard';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import {
   Carousel,
   CarouselContent,
@@ -42,8 +36,12 @@ import {
   formatLargeNumber,
   shareCurrentURL,
 } from '@/lib/utils';
-import { useProductDetails } from '@/queries/jangter';
-import type { FindProductDetailSuccessResponse } from '@/types/api/jangter.types';
+import { useProductDetails, useRecommendedProducts } from '@/queries/jangter';
+import type {
+  FindProductDetailSuccessResponse,
+  RecommendedProduct,
+  findRecommendedProductSuccessResponse,
+} from '@/types/api/jangter.types';
 
 type ProductDetail = Exclude<
   FindProductDetailSuccessResponse['data'],
@@ -56,13 +54,23 @@ interface ProductDetailResponse extends FindProductDetailSuccessResponse {
 const MarketDetailPage = () => {
   const { id } = useParams();
   const productId = Number(id);
-  const { data, isLoading, error } = useProductDetails(productId!);
+  const {
+    data: productDetailResponse,
+    isLoading: isProductDetailsLoading,
+    error: productDetailsError,
+  } = useProductDetails(productId);
+  const {
+    data: recommendedProductResponse,
+    isLoading: isRecommendedProductsLoading,
+    error: recommendedProductsError,
+  } = useRecommendedProducts(productId);
 
-  if (isLoading) return <ProductDetailSkeleton />;
+  if (isProductDetailsLoading) return <ProductDetailSkeleton />;
 
-  if (error) return <div>오류가 발생했습니다...</div>;
+  if (productDetailsError) return <div>오류가 발생했습니다...</div>;
 
-  const { data: productDetailData } = data as ProductDetailResponse;
+  const { data: productDetailData } =
+    productDetailResponse as ProductDetailResponse;
 
   const {
     title,
@@ -81,6 +89,26 @@ const MarketDetailPage = () => {
     console.log('하트');
   };
   const isOwnPost = !((userId as number) % 2);
+
+  const getRecommendPostList = (
+    isLoading: boolean,
+    error: boolean,
+    data?: findRecommendedProductSuccessResponse,
+  ) => {
+    if (isLoading) return <Loader />;
+    if (error) return <div>에러가 발생했습니다.</div>;
+
+    const recommendProducts = data?.data?.recommendProducts ?? [];
+
+    return (
+      <>
+        {recommendProducts &&
+          recommendProducts.map((product: RecommendedProduct) => (
+            <RecommendProductCard data={product} key={product.product_id} />
+          ))}
+      </>
+    );
+  };
 
   return (
     <div className="mx-auto w-full max-w-[1240px]">
@@ -166,7 +194,7 @@ const MarketDetailPage = () => {
             </h2>
             <div className="flex gap-2">
               <Badge variant={'outline'} className="hover:bg-accent">
-                {CATEGORY_MAP[itemCategoryId as number]}
+                {CATEGORY_MAP[itemCategoryId as number] || '기타'}
               </Badge>
             </div>
             <h3 className="mt-2 text-2xl font-bold">
@@ -213,43 +241,15 @@ const MarketDetailPage = () => {
       <Separator className="my-16" />
       <section>
         <h4 className="mb-8 text-2xl font-bold">추천 상품</h4>
-        <div className="flex flex-wrap gap-4">
-          {[1, 2, 3].map((num: number) => (
-            <Card key={num}>
-              <CardHeader>
-                <CardTitle>Card Title</CardTitle>
-                <CardDescription>Card Description</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>Card Content</p>
-              </CardContent>
-              <CardFooter>
-                <p>Card Footer</p>
-              </CardFooter>
-            </Card>
-          ))}
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
+          {getRecommendPostList(
+            isRecommendedProductsLoading,
+            !!recommendedProductsError,
+            recommendedProductResponse,
+          )}
         </div>
       </section>
       <Separator className="my-16" />
-      <section>
-        <h4 className="mb-8 text-2xl font-bold">판매자의 다른 상품</h4>
-        <div className="flex flex-wrap gap-4">
-          {[1, 2, 3].map((num: number) => (
-            <Card key={num}>
-              <CardHeader>
-                <CardTitle>Card Title</CardTitle>
-                <CardDescription>Card Description</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>Card Content</p>
-              </CardContent>
-              <CardFooter>
-                <p>Card Footer</p>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </section>
     </div>
   );
 };
