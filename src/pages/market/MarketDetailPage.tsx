@@ -34,7 +34,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
-
 import {
   cn,
   formatCurrency,
@@ -128,13 +127,12 @@ const MarketDetailPage = () => {
                       </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuItem
-                        onClick={() => {}}
-                        className="cursor-pointer"
-                      >
-                        <Pencil />
-                        수정
-                      </DropdownMenuItem>
+                      <Link to={`/market/${productId}/edit`}>
+                        <DropdownMenuItem className="cursor-pointer">
+                          <Pencil />
+                          수정
+                        </DropdownMenuItem>
+                      </Link>
                       <DropdownMenuItem
                         onClick={() => {}}
                         className="cursor-pointer"
