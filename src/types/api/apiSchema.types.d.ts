@@ -166,7 +166,11 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get?: never;
+    /**
+     * 테스트
+     * @description 배포 테스트용 api
+     */
+    get: operations['aaa'];
     put?: never;
     /**
      * 쇼츠 업로드
@@ -633,6 +637,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/user-janger/{userId}/purchase': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 유저 장터 상품 구매 목록
+     * @description 유저가 장터에서 구매한 물품의 목록들을 보여줍니다.
+     */
+    get: operations['findUserPurchases'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/shorts/{shortsId}': {
     parameters: {
       query?: never;
@@ -811,14 +835,28 @@ export interface components {
        * @example 50000
        */
       price: number;
-      /** @description 삭제할 이미지 URL 리스트, DB에서 이미지 URL를 조회해야하므로 번거로울 시 Send empty value 체크 해제 후 테스트 진행 */
+      /**
+       * @description 삭제할 이미지 URL 리스트, DB에서 이미지 URL를 조회해야하므로 번거로울 시 Send empty value 체크 해제 후 테스트 진행
+       * @example 삭제할 이미지 URL 리스트, DB에서 이미지 URL를 조회해야하므로 번거로울 시 Send empty value 체크 해제 후 테스트 진행
+       */
       deleteImageUrl?: string[];
-      /** @description 업데이트할 이미지파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행 */
+      /**
+       * @description 업데이트할 이미지파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
+       * @example 업데이트할 이미지파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
+       */
       imageList?: string[];
     };
+    /** @description 공통 응답 */
     CommonResponseLong: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
-      /** Format: int64 */
+      /**
+       * Format: int64
+       * @description 응답 데이터
+       */
       data?: number;
       error?: components['schemas']['ExceptionDto'];
     };
@@ -844,9 +882,15 @@ export interface components {
        * @example 편하게 테스트 내용 수정!
        */
       content: string;
-      /** @description 삭제할 이미지 URL 리스트, DB에서 이미지 URL를 조회해야하므로 번거로울 시 Send empty value 체크 해제 후 테스트 진행 */
+      /**
+       * @description 삭제할 이미지 URL 리스트, DB에서 이미지 URL를 조회해야하므로 번거로울 시 Send empty value 체크 해제 후 테스트 진행
+       * @example 삭제할 이미지 URL 리스트, DB에서 이미지 URL를 조회해야하므로 번거로울 시 Send empty value 체크 해제 후 테스트 진행
+       */
       deleteImageUrl?: string[];
-      /** @description 업데이트할 이미지파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행 */
+      /**
+       * @description 업데이트할 이미지파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
+       * @example 업데이트할 이미지파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
+       */
       imageList?: string[];
     };
     CommentsUpdateRequestDTO: {
@@ -868,8 +912,17 @@ export interface components {
       /** @enum {string} */
       status: 'ACTIVE' | 'INACTIVE';
     };
+    /** @description 공통 응답 */
     CommonResponseVoid: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
+      /**
+       * @description 응답 데이터
+       * @example 응답 데이터
+       */
       data?: Record<string, never>;
       error?: components['schemas']['ExceptionDto'];
     };
@@ -886,8 +939,17 @@ export interface components {
        */
       exampleContent: string;
     };
+    /** @description 공통 응답 */
     CommonResponseString: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
+      /**
+       * @description 응답 데이터
+       * @example 응답 데이터
+       */
       data?: string;
       error?: components['schemas']['ExceptionDto'];
     };
@@ -909,11 +971,20 @@ export interface components {
     ShortsCreateReqDTO: {
       /** Format: binary */
       file: string;
-      /** @description 제목 */
+      /**
+       * @description 제목
+       * @example 제목
+       */
       title: string;
-      /** @description 한 줄 설명 */
+      /**
+       * @description 한 줄 설명
+       * @example 한 줄 설명
+       */
       description: string;
-      /** @description 해시태그 목록 */
+      /**
+       * @description 해시태그 목록
+       * @example 해시태그 목록
+       */
       tags: string[];
     };
     /** @description 쇼츠 재생 기록 생성에 필요한 객체. */
@@ -971,23 +1042,38 @@ export interface components {
     };
     /** @description 대댓글 내용 */
     ShortsCommentCreateReqDTO: {
-      /** @description 쇼츠 댓글 내용 */
+      /**
+       * @description 쇼츠 댓글 내용
+       * @example 쇼츠 댓글 내용
+       */
       comment?: string;
     };
     /** @description 쇼츠 댓글 대댓글 정보 */
     CommentReplyDTO: {
-      /** @description 쇼츠 댓글 대댓글 아이디 */
+      /**
+       * @description 쇼츠 댓글 대댓글 아이디
+       * @example 쇼츠 댓글 대댓글 아이디
+       */
       id?: string;
-      /** @description 쇼츠 댓글 대댓글 내용 */
+      /**
+       * @description 쇼츠 댓글 대댓글 내용
+       * @example 쇼츠 댓글 대댓글 내용
+       */
       reply_text?: string;
       /**
        * Format: int64
        * @description 쇼츠 댓글 대댓글 작성자 아이디
        */
       user_id?: number;
-      /** @description 쇼츠 댓글 대댓글 작성자 닉네임 */
+      /**
+       * @description 쇼츠 댓글 대댓글 작성자 닉네임
+       * @example 쇼츠 댓글 대댓글 작성자 닉네임
+       */
       nickname?: string;
-      /** @description 쇼츠 댓글 대댓글 작성자 프로필 이미지 */
+      /**
+       * @description 쇼츠 댓글 대댓글 작성자 프로필 이미지
+       * @example 쇼츠 댓글 대댓글 작성자 프로필 이미지
+       */
       profile_image?: string;
       /**
        * Format: date-time
@@ -1002,23 +1088,47 @@ export interface components {
        * @description 쇼츠 댓글 작성자 아이디
        */
       id?: number;
-      /** @description 쇼츠 댓글 작성자 닉네임 */
+      /**
+       * @description 쇼츠 댓글 작성자 닉네임
+       * @example 쇼츠 댓글 작성자 닉네임
+       */
       nickname?: string;
-      /** @description 쇼츠 댓글 작성자 프로필 이미지 */
+      /**
+       * @description 쇼츠 댓글 작성자 프로필 이미지
+       * @example 쇼츠 댓글 작성자 프로필 이미지
+       */
       profile_image?: string;
     };
+    /** @description 공통 응답 */
     CommonResponseListShortsCommentDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
+      /**
+       * @description 응답 데이터
+       * @example 응답 데이터
+       */
       data?: components['schemas']['ShortsCommentDTO'][];
       error?: components['schemas']['ExceptionDto'];
     };
     /** @description 쇼츠 댓글 응답 DTO */
     ShortsCommentDTO: {
-      /** @description 쇼츠 댓글 아이디 */
+      /**
+       * @description 쇼츠 댓글 아이디
+       * @example 쇼츠 댓글 아이디
+       */
       id?: string;
-      /** @description 쇼츠 댓글 내용 */
+      /**
+       * @description 쇼츠 댓글 내용
+       * @example 쇼츠 댓글 내용
+       */
       comment?: string;
-      /** @description 쇼츠 아이디 */
+      /**
+       * @description 쇼츠 아이디
+       * @example 쇼츠 아이디
+       */
       shorts_id?: string;
       /**
        * Format: date-time
@@ -1026,7 +1136,10 @@ export interface components {
        */
       created_at?: string;
       user_info?: components['schemas']['CommentUserDTO'];
-      /** @description 쇼츠 댓글 대댓글 목록 */
+      /**
+       * @description 쇼츠 댓글 대댓글 목록
+       * @example 쇼츠 댓글 대댓글 목록
+       */
       replies?: components['schemas']['CommentReplyDTO'][];
     };
     /** @description 덕후 장터 게시글 생성 요청 DTO */
@@ -1052,7 +1165,10 @@ export interface components {
        * @example 50000
        */
       price: number;
-      /** @description 게시글 첨부 이미지 파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행 */
+      /**
+       * @description 게시글 첨부 이미지 파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
+       * @example 게시글 첨부 이미지 파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
+       */
       imageList?: string[];
     };
     PostCreateRequestDTO: {
@@ -1072,7 +1188,10 @@ export interface components {
        * @example 편하게 테스트 내용!
        */
       content: string;
-      /** @description 게시글 첨부 이미지 파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행 */
+      /**
+       * @description 게시글 첨부 이미지 파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
+       * @example 게시글 첨부 이미지 파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
+       */
       imageList?: string[];
     };
     CommentsCreateRequestDTO: {
@@ -1101,6 +1220,7 @@ export interface components {
       /** Format: int64 */
       sellerId: number;
     };
+    /** @description 응답 데이터 */
     ChatRoomResponseDTO: {
       /** Format: int64 */
       id?: number;
@@ -1118,7 +1238,12 @@ export interface components {
       /** Format: date-time */
       createdAt?: string;
     };
+    /** @description 공통 응답 */
     CommonResponseChatRoomResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['ChatRoomResponseDTO'];
       error?: components['schemas']['ExceptionDto'];
@@ -1155,11 +1280,17 @@ export interface components {
       keyword: string;
       explaination: string;
     };
+    /** @description 공통 응답 */
     CommonResponseResponseCreateProfanityDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['ResponseCreateProfanityDTO'];
       error?: components['schemas']['ExceptionDto'];
     };
+    /** @description 응답 데이터 */
     ResponseCreateProfanityDTO: {
       /** Format: int64 */
       id?: number;
@@ -1192,11 +1323,23 @@ export interface components {
     };
     /** @description 대댓글 내용 */
     ShortsCommentUpdateReqDTO: {
-      /** @description 쇼츠 댓글 내용 */
+      /**
+       * @description 쇼츠 댓글 내용
+       * @example 쇼츠 댓글 내용
+       */
       comment: string;
     };
+    /** @description 공통 응답 */
     CommonResponseListExampleDetailResponse: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
+      /**
+       * @description 응답 데이터
+       * @example 응답 데이터
+       */
       data?: components['schemas']['ExampleDetailResponse'][];
       error?: components['schemas']['ExceptionDto'];
     };
@@ -1219,28 +1362,123 @@ export interface components {
        */
       exampleContent?: string;
     };
+    /** @description 공통 응답 */
     CommonResponseExampleDetailResponse: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['ExampleDetailResponse'];
       error?: components['schemas']['ExceptionDto'];
     };
+    /** @description 공통 응답 */
     CommonResponseUserDetailDto: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['UserDetailDto'];
       error?: components['schemas']['ExceptionDto'];
     };
+    /** @description 응답 데이터 */
     UserDetailDto: {
       nickname?: string;
       profileImg?: string;
       gender?: string;
       ageRange?: string;
     };
+    /** @description 공통 응답 */
     CommonResponseBoolean: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
+      /**
+       * @description 응답 데이터
+       * @example false
+       */
       data?: boolean;
       error?: components['schemas']['ExceptionDto'];
     };
+    /** @description 공통 응답 */
+    CommonResponsePageImplUserPurchaseResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
+      success?: boolean;
+      data?: components['schemas']['PageImplUserPurchaseResponseDTO'];
+      error?: components['schemas']['ExceptionDto'];
+    };
+    /** @description 응답 데이터 */
+    PageImplUserPurchaseResponseDTO: {
+      content?: components['schemas']['UserPurchaseResponseDTO'][];
+      pageable?: components['schemas']['PageableObject'];
+      /** Format: int64 */
+      totalElements?: number;
+      /** Format: int32 */
+      totalPages?: number;
+      last?: boolean;
+      /** Format: int32 */
+      size?: number;
+      /** Format: int32 */
+      number?: number;
+      sort?: components['schemas']['SortObject'];
+      /** Format: int32 */
+      numberOfElements?: number;
+      first?: boolean;
+      empty?: boolean;
+    };
+    PageableObject: {
+      /** Format: int64 */
+      offset?: number;
+      sort?: components['schemas']['SortObject'];
+      paged?: boolean;
+      /** Format: int32 */
+      pageNumber?: number;
+      /** Format: int32 */
+      pageSize?: number;
+      unpaged?: boolean;
+    };
+    SortObject: {
+      empty?: boolean;
+      sorted?: boolean;
+      unsorted?: boolean;
+    };
+    /** @description 유저 구매 목록 응답 객체 */
+    UserPurchaseResponseDTO: {
+      /**
+       * Format: int64
+       * @description 거래 완료 ID
+       */
+      id?: number;
+      /**
+       * Format: int64
+       * @description 장터 글 ID
+       */
+      jangterId?: number;
+      /**
+       * @description 제목
+       * @example 제목
+       */
+      title?: string;
+      /** @description 구매가격 */
+      price?: number;
+      /**
+       * @description 상품 카테고리 이름
+       * @example 상품 카테고리 이름
+       */
+      categoryName?: string;
+    };
+    /** @description 공통 응답 */
     CommonResponseShortsResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['ShortsResponseDTO'];
       error?: components['schemas']['ExceptionDto'];
@@ -1310,8 +1548,17 @@ export interface components {
       user_like_interaction?: components['schemas']['ShortsLikeInteractionResponseDTO'];
       popularity_matic?: components['schemas']['PopularityMaticResDTO'];
     };
+    /** @description 공통 응답 */
     CommonResponseListShortsInfoResDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
+      /**
+       * @description 응답 데이터
+       * @example 응답 데이터
+       */
       data?: components['schemas']['ShortsInfoResDTO'][];
       error?: components['schemas']['ExceptionDto'];
     };
@@ -1330,6 +1577,7 @@ export interface components {
       /** Format: int32 */
       dislikes?: number;
     };
+    /** @description 응답 데이터 */
     ShortsInfoResDTO: {
       id?: string;
       title?: string;
@@ -1340,7 +1588,12 @@ export interface components {
       /** Format: date-time */
       created_at?: string;
     };
+    /** @description 공통 응답 */
     CommonResponseWeeklyStatsResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['WeeklyStatsResponseDTO'];
       error?: components['schemas']['ExceptionDto'];
@@ -1376,8 +1629,17 @@ export interface components {
       size?: number;
       sort?: string[];
     };
+    /** @description 공통 응답 */
     CommonResponseListSimilarProductResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
+      /**
+       * @description 응답 데이터
+       * @example 응답 데이터
+       */
       data?: components['schemas']['SimilarProductResponseDTO'][];
       error?: components['schemas']['ExceptionDto'];
     };
@@ -1410,7 +1672,12 @@ export interface components {
        */
       imageUrl?: string;
     };
+    /** @description 공통 응답 */
     CommonResponseMarketPriceSearchResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['MarketPriceSearchResponseDTO'];
       error?: components['schemas']['ExceptionDto'];
@@ -1424,7 +1691,10 @@ export interface components {
       keyword?: string;
       priceGraph?: components['schemas']['PriceGraphResponseDTO'];
       weeklyStats?: components['schemas']['WeeklyStatsResponseDTO'];
-      /** @description 유사 상품 목록 */
+      /**
+       * @description 유사 상품 목록
+       * @example 유사 상품 목록
+       */
       similarProducts?: components['schemas']['SimilarProductResponseDTO'][];
     };
     /** @description 시세 데이터 포인트 */
@@ -1465,24 +1735,43 @@ export interface components {
     };
     /** @description 시세 그래프 응답 DTO */
     PriceGraphResponseDTO: {
-      /** @description 날짜별 데이터 */
+      /**
+       * @description 날짜별 데이터
+       * @example 날짜별 데이터
+       */
       dataPoints?: components['schemas']['PriceDataPoint'][];
     };
+    /** @description 공통 응답 */
     CommonResponsePriceGraphResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['PriceGraphResponseDTO'];
       error?: components['schemas']['ExceptionDto'];
     };
+    /** @description 공통 응답 */
     CommonResponseProductFindDetailResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['ProductFindDetailResponseDTO'];
       error?: components['schemas']['ExceptionDto'];
     };
     /** @description 게시글 상세 조회 응답 DTO */
     ProductFindDetailResponseDTO: {
-      /** @description 장터글 제목 */
+      /**
+       * @description 장터글 제목
+       * @example 장터글 제목
+       */
       title?: string;
-      /** @description 장터글 내용 */
+      /**
+       * @description 장터글 내용
+       * @example 장터글 내용
+       */
       description?: string;
       /** @description 장터글 가격 */
       price?: number;
@@ -1502,14 +1791,23 @@ export interface components {
        * @description 조회수
        */
       viewCount?: number;
-      /** @description 이미지 리스트 */
+      /**
+       * @description 이미지 리스트
+       * @example 이미지 리스트
+       */
       imageUrlList?: string[];
     };
+    /** @description 공통 응답 */
     CommonResponseProductRecommendResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['ProductRecommendResponseDTO'];
       error?: components['schemas']['ExceptionDto'];
     };
+    /** @description 응답 데이터 */
     ProductRecommendResponseDTO: {
       recommendProducts?: components['schemas']['RecommendProduct'][];
     };
@@ -1526,7 +1824,12 @@ export interface components {
       /** Format: date-time */
       created_at?: string;
     };
+    /** @description 공통 응답 */
     CommonResponsePostListResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['PostListResponseDTO'];
       error?: components['schemas']['ExceptionDto'];
@@ -1548,11 +1851,20 @@ export interface components {
        * @description 카테고리 ID
        */
       categoryId?: number;
-      /** @description 게시글 제목 */
+      /**
+       * @description 게시글 제목
+       * @example 게시글 제목
+       */
       title?: string;
-      /** @description 게시글 본문 */
+      /**
+       * @description 게시글 본문
+       * @example 게시글 본문
+       */
       content?: string;
-      /** @description 저장된 이미지 URL */
+      /**
+       * @description 저장된 이미지 URL
+       * @example 저장된 이미지 URL
+       */
       imageUrl?: string;
       /**
        * Format: date-time
@@ -1565,13 +1877,17 @@ export interface components {
        */
       views?: number;
     };
+    /** @description 응답 데이터 */
     PostListResponseDTO: {
       /**
        * Format: int64
        * @description 해당 카테고리에 접속된 게시글 수(삭제된 글 제외)
        */
       postCount?: number;
-      /** @description 게시글 정보 */
+      /**
+       * @description 게시글 정보
+       * @example 게시글 정보
+       */
       responsePostList?: components['schemas']['FindAllPostQuerydslDTO'][];
     };
     AnimationGenre: {
@@ -1593,7 +1909,7 @@ export interface components {
       id?: number;
       name?: string;
       /** @enum {string} */
-      createdType?: 'USER' | 'ADMIN' | 'BLACKLIST';
+      createdType?: 'USER' | 'ADMIN' | 'BLACKLIST' | 'ANONYMOUS';
       /** @enum {string} */
       status?: 'ACTIVE' | 'INACTIVE' | 'PENDING';
       /** Format: int64 */
@@ -1665,9 +1981,9 @@ export interface components {
       enabled?: boolean;
       password?: string;
       username?: string;
+      anonymous?: boolean;
       /** Format: int64 */
       userId?: number;
-      anonymous?: boolean;
       authorities?: components['schemas']['GrantedAuthority'][];
       accountNonExpired?: boolean;
       accountNonLocked?: boolean;
@@ -1689,24 +2005,36 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string;
       /** @enum {string} */
-      role?: 'USER' | 'ADMIN' | 'BLACKLIST';
+      role?: 'USER' | 'ADMIN' | 'BLACKLIST' | 'ANONYMOUS';
       email?: string;
       posts?: components['schemas']['Post'][];
     };
+    /** @description 공통 응답 */
     CommonResponsePostDetailResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['PostDetailResponseDTO'];
       error?: components['schemas']['ExceptionDto'];
     };
+    /** @description 응답 데이터 */
     PostDetailResponseDTO: {
       /**
        * Format: int64
        * @description 게시글 ID
        */
       postId?: number;
-      /** @description 게시글 제목 */
+      /**
+       * @description 게시글 제목
+       * @example 게시글 제목
+       */
       title?: string;
-      /** @description 게시글 본문 */
+      /**
+       * @description 게시글 본문
+       * @example 게시글 본문
+       */
       content?: string;
       /**
        * Format: date-time
@@ -1718,21 +2046,42 @@ export interface components {
        * @description 조회수
        */
       viewCount?: number;
-      /** @description 봤는지 안봤는지? 윤정님 확인 필요 */
+      /**
+       * @description 봤는지 안봤는지? 윤정님 확인 필요
+       * @example false
+       */
       owner?: boolean;
-      /** @description 보여줄 이미지 URL */
+      /**
+       * @description 보여줄 이미지 URL
+       * @example 보여줄 이미지 URL
+       */
       imageUrls?: string[];
     };
+    /** @description 공통 응답 */
     CommonResponseListChatRoomResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
+      /**
+       * @description 응답 데이터
+       * @example 응답 데이터
+       */
       data?: components['schemas']['ChatRoomResponseDTO'][];
       error?: components['schemas']['ExceptionDto'];
     };
+    /** @description 공통 응답 */
     CommonResponsePageResponseCategorySeachDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['PageResponseCategorySeachDTO'];
       error?: components['schemas']['ExceptionDto'];
     };
+    /** @description 응답 데이터 */
     PageResponseCategorySeachDTO: {
       /** Format: int64 */
       totalElements?: number;
@@ -1750,17 +2099,6 @@ export interface components {
       first?: boolean;
       last?: boolean;
       empty?: boolean;
-    };
-    PageableObject: {
-      /** Format: int64 */
-      offset?: number;
-      sort?: components['schemas']['SortObject'];
-      paged?: boolean;
-      /** Format: int32 */
-      pageNumber?: number;
-      /** Format: int32 */
-      pageSize?: number;
-      unpaged?: boolean;
     };
     ResponseCategorySeachDTO: {
       /** Format: int64 */
@@ -1783,12 +2121,12 @@ export interface components {
       genreId?: number[];
       genreName?: string[];
     };
-    SortObject: {
-      empty?: boolean;
-      sorted?: boolean;
-      unsorted?: boolean;
-    };
+    /** @description 공통 응답 */
     CommonResponseResponseCategoryDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['ResponseCategoryDTO'];
       error?: components['schemas']['ExceptionDto'];
@@ -1798,11 +2136,17 @@ export interface components {
       keyword?: string;
       explaination?: string;
     };
+    /** @description 공통 응답 */
     CommonResponsePageProfannityResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
       success?: boolean;
       data?: components['schemas']['PageProfannityResponseDTO'];
       error?: components['schemas']['ExceptionDto'];
     };
+    /** @description 응답 데이터 */
     PageProfannityResponseDTO: {
       /** Format: int64 */
       totalElements?: number;
@@ -1838,7 +2182,12 @@ export interface components {
     };
   };
   responses: never;
-  parameters: never;
+  parameters: {
+    /** @description 페이지 번호 0부터 시작 */
+    page: string;
+    /** @description 한 페이지에 들어갈 항목들의 갯수 */
+    size: string;
+  };
   requestBodies: never;
   headers: never;
   pathItems: never;
@@ -2427,6 +2776,26 @@ export interface operations {
       };
       /** @description 파일 업로드 실패 */
       503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          '*/*': components['schemas']['CommonResponseString'];
+        };
+      };
+    };
+  };
+  aaa: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
         headers: {
           [name: string]: unknown;
         };
@@ -3644,6 +4013,53 @@ export interface operations {
       };
     };
   };
+  findUserPurchases: {
+    parameters: {
+      query?: {
+        /** @description 페이지 번호 (0부터 시작) */
+        page?: number;
+        /** @description 페이지 크기 */
+        size?: number;
+        /** @description 정렬 기준 ID, TITLE, CATEGORY_NAME, PRICE (예: ID,ASC || TITLE,DESC).  */
+        sort?: string;
+      };
+      header?: never;
+      path: {
+        userId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description API 요청 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          '*/*': components['schemas']['CommonResponsePageImplUserPurchaseResponseDTO'];
+        };
+      };
+      /** @description 입력한 값의 유효성이 올바르지 않을 때 */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          '*/*': components['schemas']['CommonResponsePageImplUserPurchaseResponseDTO'];
+        };
+      };
+      /** @description 사용자 로그인이 되어있지 않았을 때 */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          '*/*': components['schemas']['CommonResponsePageImplUserPurchaseResponseDTO'];
+        };
+      };
+    };
+  };
   findShortsInfo: {
     parameters: {
       query?: never;
@@ -3699,6 +4115,7 @@ export interface operations {
   getWeeklyStats: {
     parameters: {
       query: {
+        /** @description 검색할 상품 키워드 */
         keyword: string;
       };
       header?: never;
@@ -3721,7 +4138,9 @@ export interface operations {
   findSimilarProducts: {
     parameters: {
       query: {
+        /** @description 검색할 상품 키워드 */
         keyword: string;
+        /** @description 페이지네이션 정보 */
         pageable: components['schemas']['Pageable'];
       };
       header?: never;
@@ -3752,21 +4171,14 @@ export interface operations {
         endDate: string;
         /** @description 그래프 표시 옵션 (기본값: ALL) */
         displayOption?: 'REGISTERED_PRICE_ONLY' | 'SOLD_PRICE_ONLY' | 'ALL';
-        /**
-         * @description 요청할 페이지 번호 (기본값: 0)
-         * @example 0
-         */
+        /** @description 정렬 방향 */
+        direction?: 'ASC' | 'DESC';
+        /** @description Zero-based page index (0..N) */
         page?: number;
-        /**
-         * @description 한 페이지당 데이터 개수 (기본값: 5)
-         * @example 5
-         */
+        /** @description The size of the page to be returned */
         size?: number;
-        /**
-         * @description 정렬 조건 (기본값: id,asc)
-         * @example id,asc
-         */
-        sort?: string;
+        /** @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
+        sort?: string[];
       };
       header?: never;
       path?: never;
@@ -3788,9 +4200,13 @@ export interface operations {
   getPriceGraph: {
     parameters: {
       query: {
+        /** @description 검색할 상품 키워드 */
         keyword: string;
+        /** @description 조회 시작 날짜 */
         fromDate: string;
+        /** @description 조회 종료 날짜 */
         toDate: string;
+        /** @description 그래프 표시 옵션 (ALL, REGISTERED_PRICE_ONLY, SOLD_PRICE_ONLY) */
         option?: 'REGISTERED_PRICE_ONLY' | 'SOLD_PRICE_ONLY' | 'ALL';
       };
       header?: never;
