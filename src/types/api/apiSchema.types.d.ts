@@ -788,6 +788,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/itemCategory': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 덕후장터 아이템 카테고리 전체 조회
+     * @description API로 GET요청시 덕후장터 아이템 카테고리 ID와 NAME이 List로 반환됨
+     */
+    get: operations['getAllItemCategories'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/category/{id}': {
     parameters: {
       query?: never;
@@ -812,40 +832,6 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
-    /** @description 게시글 업데이트 요청 DTO */
-    ProductUpdateRequestDTO: {
-      /**
-       * Format: int64
-       * @description 카테고리 ID (필수값, 현재 1 ~ 4까지 있음)
-       * @example 1
-       */
-      categoryId: number;
-      /**
-       * @description 판매글 제목 (필수값)
-       * @example 편하게 테스트 제목 수정
-       */
-      title: string;
-      /**
-       * @description 판매글 본문
-       * @example 편하게 테스트 본문 수정
-       */
-      description: string;
-      /**
-       * @description 가격
-       * @example 50000
-       */
-      price: number;
-      /**
-       * @description 삭제할 이미지 URL 리스트, DB에서 이미지 URL를 조회해야하므로 번거로울 시 Send empty value 체크 해제 후 테스트 진행
-       * @example 삭제할 이미지 URL 리스트, DB에서 이미지 URL를 조회해야하므로 번거로울 시 Send empty value 체크 해제 후 테스트 진행
-       */
-      deleteImageUrl?: string[];
-      /**
-       * @description 업데이트할 이미지파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
-       * @example 업데이트할 이미지파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
-       */
-      imageList?: string[];
-    };
     /** @description 공통 응답 */
     CommonResponseLong: {
       /**
@@ -864,34 +850,6 @@ export interface components {
       /** Format: int32 */
       code: number;
       message: string;
-    };
-    PostUpdateRequestDTO: {
-      /**
-       * Format: int64
-       * @description 카테고리Id(필수값, 테스트시 69나 70으로 입력)
-       * @example 69
-       */
-      categoryId: number;
-      /**
-       * @description 제목(필수값)
-       * @example 편하게 테스트 제목 수정!
-       */
-      title: string;
-      /**
-       * @description 내용(필수값)
-       * @example 편하게 테스트 내용 수정!
-       */
-      content: string;
-      /**
-       * @description 삭제할 이미지 URL 리스트, DB에서 이미지 URL를 조회해야하므로 번거로울 시 Send empty value 체크 해제 후 테스트 진행
-       * @example 삭제할 이미지 URL 리스트, DB에서 이미지 URL를 조회해야하므로 번거로울 시 Send empty value 체크 해제 후 테스트 진행
-       */
-      deleteImageUrl?: string[];
-      /**
-       * @description 업데이트할 이미지파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
-       * @example 업데이트할 이미지파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
-       */
-      imageList?: string[];
     };
     CommentsUpdateRequestDTO: {
       /**
@@ -1142,58 +1100,6 @@ export interface components {
        */
       replies?: components['schemas']['CommentReplyDTO'][];
     };
-    /** @description 덕후 장터 게시글 생성 요청 DTO */
-    ProductCreateRequestDTO: {
-      /**
-       * Format: int64
-       * @description 카테고리 ID (필수값, 현재 1 ~ 4까지 있음)
-       * @example 1
-       */
-      categoryId: number;
-      /**
-       * @description 판매글 제목 (필수값)
-       * @example 편하게 테스트 제목 입력
-       */
-      title: string;
-      /**
-       * @description 판매글 본문
-       * @example 편하게 테스트 본문 입력
-       */
-      description: string;
-      /**
-       * @description 가격
-       * @example 50000
-       */
-      price: number;
-      /**
-       * @description 게시글 첨부 이미지 파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
-       * @example 게시글 첨부 이미지 파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
-       */
-      imageList?: string[];
-    };
-    PostCreateRequestDTO: {
-      /**
-       * Format: int64
-       * @description 카테고리Id(필수값, 테스트시 69나 70으로 입력)
-       * @example 69
-       */
-      categoryId: number;
-      /**
-       * @description 제목(필수값)
-       * @example 편하게 테스트 제목!
-       */
-      title: string;
-      /**
-       * @description 내용(필수값)
-       * @example 편하게 테스트 내용!
-       */
-      content: string;
-      /**
-       * @description 게시글 첨부 이미지 파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
-       * @example 게시글 첨부 이미지 파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행
-       */
-      imageList?: string[];
-    };
     CommentsCreateRequestDTO: {
       /**
        * Format: int64
@@ -1417,19 +1323,19 @@ export interface components {
     PageImplUserPurchaseResponseDTO: {
       content?: components['schemas']['UserPurchaseResponseDTO'][];
       pageable?: components['schemas']['PageableObject'];
+      last?: boolean;
       /** Format: int64 */
       totalElements?: number;
       /** Format: int32 */
       totalPages?: number;
-      last?: boolean;
       /** Format: int32 */
       size?: number;
       /** Format: int32 */
       number?: number;
       sort?: components['schemas']['SortObject'];
+      first?: boolean;
       /** Format: int32 */
       numberOfElements?: number;
-      first?: boolean;
       empty?: boolean;
     };
     PageableObject: {
@@ -1792,6 +1698,16 @@ export interface components {
        */
       viewCount?: number;
       /**
+       * Format: int64
+       * @description 장터 카테고리 ID
+       */
+      itemCategoryId?: number;
+      /**
+       * Format: int64
+       * @description 판매자 Id
+       */
+      userId?: number;
+      /**
        * @description 이미지 리스트
        * @example 이미지 리스트
        */
@@ -1823,6 +1739,29 @@ export interface components {
       thumbnail_url?: string;
       /** Format: date-time */
       created_at?: string;
+    };
+    /** @description 공통 응답 */
+    CommonResponseItemCategoriesResponseDTO: {
+      /**
+       * @description 성공 여부
+       * @example true
+       */
+      success?: boolean;
+      data?: components['schemas']['ItemCategoriesResponseDTO'];
+      error?: components['schemas']['ExceptionDto'];
+    };
+    /** @description 응답 데이터 */
+    ItemCategoriesResponseDTO: {
+      /**
+       * @description 아이템 카테고리 id 전체 반환
+       * @example 아이템 카테고리 id 전체 반환
+       */
+      itemCategoryIdList?: number[];
+      /**
+       * @description 아이템 카테고리 이름 전체 반환
+       * @example 아이템 카테고리 이름 전체 반환
+       */
+      itemCategoryNameList?: string[];
     };
     /** @description 공통 응답 */
     CommonResponsePostListResponseDTO: {
@@ -2052,6 +1991,11 @@ export interface components {
        */
       owner?: boolean;
       /**
+       * Format: int64
+       * @description 카테고리ID
+       */
+      categoryId?: number;
+      /**
        * @description 보여줄 이미지 URL
        * @example 보여줄 이미지 URL
        */
@@ -2093,10 +2037,10 @@ export interface components {
       /** Format: int32 */
       number?: number;
       sort?: components['schemas']['SortObject'];
+      first?: boolean;
       pageable?: components['schemas']['PageableObject'];
       /** Format: int32 */
       numberOfElements?: number;
-      first?: boolean;
       last?: boolean;
       empty?: boolean;
     };
@@ -2158,10 +2102,10 @@ export interface components {
       /** Format: int32 */
       number?: number;
       sort?: components['schemas']['SortObject'];
+      first?: boolean;
       pageable?: components['schemas']['PageableObject'];
       /** Format: int32 */
       numberOfElements?: number;
-      first?: boolean;
       last?: boolean;
       empty?: boolean;
     };
@@ -2200,8 +2144,8 @@ export interface operations {
       header?: never;
       path: {
         /**
-         * @description 게시글 ID
-         * @example 41
+         * @description 판매글 ID
+         * @example 20
          */
         productId: number;
       };
@@ -2231,7 +2175,32 @@ export interface operations {
   };
   updateProduct: {
     parameters: {
-      query?: never;
+      query: {
+        /**
+         * @description 카테고리 ID (필수값, 현재 1 ~ 4까지 있음)
+         * @example 1
+         */
+        categoryId: string;
+        /**
+         * @description 판매글 제목 (필수값)
+         * @example 편하게 테스트 제목 수정
+         */
+        title: string;
+        /**
+         * @description 판매글 본문
+         * @example 편하게 테스트 본문 수정
+         */
+        description: string;
+        /**
+         * @description 가격
+         * @example 50000
+         */
+        price: string;
+        /** @description 삭제할 이미지 URL 리스트, DB에서 이미지 URL를 조회해야하므로 번거로울 시 Send empty value 체크 해제 후 테스트 진행 */
+        deleteImageUrl?: string;
+        /** @description 업데이트할 이미지파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행 */
+        imageList?: string;
+      };
       header?: never;
       path: {
         /**
@@ -2242,11 +2211,7 @@ export interface operations {
       };
       cookie?: never;
     };
-    requestBody?: {
-      content: {
-        'multipart/form-data': components['schemas']['ProductUpdateRequestDTO'];
-      };
-    };
+    requestBody?: never;
     responses: {
       /** @description 게시글 수정 성공 */
       200: {
@@ -2288,13 +2253,7 @@ export interface operations {
   };
   deleteProduct: {
     parameters: {
-      query: {
-        /**
-         * @description 카테고리 ID
-         * @example 4
-         */
-        categoryId: number;
-      };
+      query?: never;
       header?: never;
       path: {
         /** @description 게시글 ID */
@@ -2372,7 +2331,27 @@ export interface operations {
   };
   updatePost: {
     parameters: {
-      query?: never;
+      query: {
+        /**
+         * @description 카테고리Id(필수값, 테스트시 69나 70으로 입력)
+         * @example 69
+         */
+        categoryId: string;
+        /**
+         * @description 제목(필수값)
+         * @example 편하게 테스트 제목 수정!
+         */
+        title: string;
+        /**
+         * @description 내용(필수값)
+         * @example 편하게 테스트 내용 수정!
+         */
+        content: string;
+        /** @description 삭제할 이미지 URL 리스트, DB에서 이미지 URL를 조회해야하므로 번거로울 시 Send empty value 체크 해제 후 테스트 진행 */
+        deleteImageUrl?: string;
+        /** @description 업데이트할 이미지파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행 */
+        imageList?: string;
+      };
       header?: never;
       path: {
         /**
@@ -2383,11 +2362,7 @@ export interface operations {
       };
       cookie?: never;
     };
-    requestBody?: {
-      content: {
-        'multipart/form-data': components['schemas']['PostUpdateRequestDTO'];
-      };
-    };
+    requestBody?: never;
     responses: {
       /** @description 게시글 수정 성공 */
       200: {
@@ -2429,10 +2404,7 @@ export interface operations {
   };
   deletePost: {
     parameters: {
-      query: {
-        /** @description 카테고리 ID */
-        categoryId: number;
-      };
+      query?: never;
       header?: never;
       path: {
         /** @description 게시글 ID */
@@ -3173,16 +3145,35 @@ export interface operations {
   };
   createProduct: {
     parameters: {
-      query?: never;
+      query: {
+        /**
+         * @description 카테고리 ID (필수값, 현재 1 ~ 4까지 있음)
+         * @example 1
+         */
+        categoryId: string;
+        /**
+         * @description 판매글 제목 (필수값)
+         * @example 편하게 테스트 제목 입력
+         */
+        title: string;
+        /**
+         * @description 판매글 본문
+         * @example 편하게 테스트 본문 입력
+         */
+        description: string;
+        /**
+         * @description 가격
+         * @example 50000
+         */
+        price: string;
+        /** @description 게시글 첨부 이미지 파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행 */
+        imageList?: string;
+      };
       header?: never;
       path?: never;
       cookie?: never;
     };
-    requestBody?: {
-      content: {
-        'multipart/form-data': components['schemas']['ProductCreateRequestDTO'];
-      };
-    };
+    requestBody?: never;
     responses: {
       /** @description 게시글 생성 성공 */
       201: {
@@ -3248,16 +3239,30 @@ export interface operations {
   };
   createPost: {
     parameters: {
-      query?: never;
+      query: {
+        /**
+         * @description 카테고리Id(필수값, 테스트시 69나 70으로 입력)
+         * @example 69
+         */
+        categoryId: string;
+        /**
+         * @description 제목(필수값)
+         * @example 편하게 테스트 제목!
+         */
+        title: string;
+        /**
+         * @description 내용(필수값)
+         * @example 편하게 테스트 내용!
+         */
+        content: string;
+        /** @description 게시글 첨부 이미지 파일 (여러 파일 업로드 가능), 이미지 파일 업로드 안할 시 Send empty value 체크 해제 후 테스트 진행 */
+        imageList?: string;
+      };
       header?: never;
       path?: never;
       cookie?: never;
     };
-    requestBody?: {
-      content: {
-        'multipart/form-data': components['schemas']['PostCreateRequestDTO'];
-      };
-    };
+    requestBody?: never;
     responses: {
       /** @description 게시글 생성 성공 */
       201: {
@@ -4244,6 +4249,26 @@ export interface operations {
         };
         content: {
           '*/*': components['schemas']['CommonResponseProductRecommendResponseDTO'];
+        };
+      };
+    };
+  };
+  getAllItemCategories: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 아이템 리스트 전송 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          '*/*': components['schemas']['CommonResponseItemCategoriesResponseDTO'];
         };
       };
     };

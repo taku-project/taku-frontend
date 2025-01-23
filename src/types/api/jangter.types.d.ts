@@ -44,7 +44,7 @@ type FindProductDetailSuccessResponse =
 
 export type UpdateProductRequest = NonNullable<
   operations['updateProduct']['requestBody']
->['content']['application/json'];
+>['content']['multipart/form-data'];
 export type UpdateProductSuccessResponse =
   operations['updateProduct']['responses'][200]['content']['*/*'];
 
