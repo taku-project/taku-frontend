@@ -27,10 +27,10 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { CATEGORY_MAP } from '@/constants/jangter';
-import { useCreateProduct, useProductDetails } from '@/queries/jangter';
+import { useProductDetails, useUpdateteProduct } from '@/queries/jangter';
 import type { FindProductDetailSuccessResponse } from '@/types/api/jangter.types';
 
-const addProductSchema = z.object({
+const updateProductSchema = z.object({
   categoryId: z.string().transform((val) => {
     const numberValue = parseFloat(val);
     if (isNaN(numberValue)) {
@@ -82,9 +82,10 @@ interface ProductDetailResponse extends FindProductDetailSuccessResponse {
 }
 const UpdateMarketPage = () => {
   const { id } = useParams();
-  const { mutate } = useCreateProduct();
-
   const productId = Number(id);
+
+  const { mutate } = useUpdateteProduct(productId);
+
   const { data, isLoading, error } = useProductDetails(productId!);
 
   if (isLoading) return <LoadingSpinner />;
@@ -93,17 +94,19 @@ const UpdateMarketPage = () => {
 
   const { data: productDetailData } = data as ProductDetailResponse;
 
-  const { title, description, price, imageUrlList } = productDetailData;
+  const { title, description, price, imageUrlList, itemCategoryId } =
+    productDetailData;
 
-  const form = useForm<z.infer<typeof addProductSchema>>({
+  const form = useForm<z.infer<typeof updateProductSchema>>({
     mode: 'onBlur',
-    resolver: zodResolver(addProductSchema),
+    resolver: zodResolver(updateProductSchema),
     defaultValues: {
       title,
       price,
       description,
       imageList: undefined,
       deleteImageUrl: [],
+      categoryId: itemCategoryId,
     },
   });
   const { setValue, watch, handleSubmit } = form;
@@ -126,16 +129,15 @@ const UpdateMarketPage = () => {
     [setValue, values.imageList],
   );
 
-  const onSubmit = (data: z.infer<typeof addProductSchema>) => {
-    console.log(data);
-    // mutate(data);
+  const onSubmit = (data: z.infer<typeof updateProductSchema>) => {
+    mutate(data);
   };
 
   return (
     <div className="mx-auto w-full max-w-[720px]">
       <Form {...form}>
         <form
-          id="creaetProductForm"
+          id="updateProductForm"
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-6"
         >
@@ -182,7 +184,10 @@ const UpdateMarketPage = () => {
                   상품 카테고리
                 </FormLabel>
                 <FormControl className="h-14 p-4 text-[#767676] md:text-base">
-                  <Select onValueChange={field.onChange}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={String(itemCategoryId)}
+                  >
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="카테고리" />
                     </SelectTrigger>

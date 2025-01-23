@@ -34,6 +34,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
+import { CATEGORY_MAP } from '@/constants/jangter';
 import {
   cn,
   formatCurrency,
@@ -63,15 +64,23 @@ const MarketDetailPage = () => {
 
   const { data: productDetailData } = data as ProductDetailResponse;
 
-  const { title, description, price, createdAt, viewCount, imageUrlList } =
-    productDetailData;
+  const {
+    title,
+    description,
+    price,
+    createdAt,
+    viewCount,
+    imageUrlList,
+    itemCategoryId,
+    userId,
+  } = productDetailData;
   const handleChat = () => {
     console.log(id);
   };
   const handleLike = () => {
     console.log('하트');
   };
-  const isOwnPost = true;
+  const isOwnPost = !((userId as number) % 2);
 
   return (
     <div className="mx-auto w-full max-w-[1240px]">
@@ -156,21 +165,9 @@ const MarketDetailPage = () => {
               {formatKoreanDate(createdAt as string)}
             </h2>
             <div className="flex gap-2">
-              <Link to={'/'}>
-                <Badge variant={'outline'} className="hover:bg-accent">
-                  카테고리1
-                </Badge>
-              </Link>
-              <Link to={'/'}>
-                <Badge variant={'outline'} className="hover:bg-accent">
-                  카테고리2
-                </Badge>
-              </Link>
-              <Link to={'/'}>
-                <Badge variant={'outline'} className="hover:bg-accent">
-                  카테고리3
-                </Badge>
-              </Link>
+              <Badge variant={'outline'} className="hover:bg-accent">
+                {CATEGORY_MAP[itemCategoryId as number]}
+              </Badge>
             </div>
             <h3 className="mt-2 text-2xl font-bold">
               {formatCurrency(price as number)}
