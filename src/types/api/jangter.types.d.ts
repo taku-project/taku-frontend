@@ -42,9 +42,14 @@ type FindProductDetailSuccessResponse =
  *
  */
 
-export type UpdateProductRequest = NonNullable<
+type UpdateProduct = NonNullable<
   operations['updateProduct']['requestBody']
 >['content']['multipart/form-data'];
+
+export interface UpdateProductRequest extends UpdateProduct {
+  deleteImageUrl?: string[];
+  imageList?: File[];
+}
 export type UpdateProductSuccessResponse =
   operations['updateProduct']['responses'][200]['content']['*/*'];
 
@@ -57,3 +62,17 @@ export type deleteProductQuery =
   operations['deleteProduct']['parameters']['query'];
 export type deleteProductSuccessResponse =
   operations['deleteProduct']['responses'][200]['content']['*/*'];
+
+/**
+ * path: '/api/itemCategory'
+ */
+
+/**
+ * 덕후장터 아이템 카테고리 전체 조회
+ * @description API로 GET요청시 덕후장터 아이템 카테고리 ID와 NAME이 List로 반환됨
+ */
+
+export type GetAllItemCategoriesSuccessResponse =
+  operations['getAllItemCategories']['responses'][200]['content']['*/*'];
+export type ItemCategoriesIdList = number[];
+export type itemCategoryNameList = string[];
