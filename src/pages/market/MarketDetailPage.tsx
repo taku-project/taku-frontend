@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import {
   Bookmark,
   EllipsisVertical,
@@ -12,6 +14,16 @@ import { Link, useParams } from 'react-router-dom';
 
 import { ProductDetailSkeleton } from '@/components/loading/jangter/ProductDetailSkeleton';
 import { RecommendProductCard } from '@/components/market/RecommendProductCard';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
@@ -37,7 +49,11 @@ import {
   formatLargeNumber,
   shareCurrentURL,
 } from '@/lib/utils';
-import { useProductDetails, useRecommendedProducts } from '@/queries/jangter';
+import {
+  useDeleteProduct,
+  useProductDetails,
+  useRecommendedProducts,
+} from '@/queries/jangter';
 import type {
   FindProductDetailSuccessResponse,
   RecommendedProduct,
@@ -65,6 +81,9 @@ const MarketDetailPage = () => {
     isLoading: isRecommendedProductsLoading,
     error: recommendedProductsError,
   } = useRecommendedProducts(productId);
+  const { mutate } = useDeleteProduct(productId);
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   if (isProductDetailsLoading) return <ProductDetailSkeleton />;
 
@@ -165,14 +184,16 @@ const MarketDetailPage = () => {
                       </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <Link to={`/market/${productId}/edit`}>
-                        <DropdownMenuItem className="cursor-pointer">
+                      <DropdownMenuItem className="cursor-pointer" asChild>
+                        <Link to={`/market/${productId}/edit`}>
                           <Pencil />
                           수정
-                        </DropdownMenuItem>
-                      </Link>
+                        </Link>
+                      </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => {}}
+                        onClick={() => {
+                          setIsDialogOpen(true);
+                        }}
                         className="cursor-pointer"
                       >
                         <Trash2 />
@@ -264,8 +285,32 @@ const MarketDetailPage = () => {
           </div>
         </Link>
       </div>
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              정말로 장터 게시글 삭제를 희망하십니까?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              한 번 삭제된 게시물은 복구될 수 없습니다.
+              <br />
+              그럼에도 삭제를 원하신다면, 아래 삭제 버튼을 눌러 진행해주세요.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>취소</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => mutate()}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              삭제
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
 
 export default MarketDetailPage;
+alert;
