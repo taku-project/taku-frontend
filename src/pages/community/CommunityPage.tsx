@@ -198,7 +198,6 @@ const CommunityPage = () => {
                     />
                   </Card>
                   <div className="space-y-1">
-                    <p>{category.id}</p>
                     <h3 className="font-bold">{category.name}</h3>
                     {/* 한줄로만 표현하기 나머지 ... */}
                     <div className="line-clamp-1 flex flex-wrap gap-1 overflow-hidden text-muted-foreground">

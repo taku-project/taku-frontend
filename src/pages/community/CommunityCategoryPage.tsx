@@ -1,7 +1,10 @@
+import { useState } from 'react';
+
 import { useQuery } from '@tanstack/react-query';
-import { ChevronLeft } from 'lucide-react';
+import { Bookmark, BookmarkCheck, ChevronLeft } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
+import TestImg from '@/assets/스크린샷.png';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -19,6 +22,8 @@ type Gerne = {
 
 const CommunityCategoryPage = () => {
   const { category } = useParams();
+
+  const [bookmarkChecked, setBookmarkChecked] = useState(false);
 
   const { data, status, error } = useQuery({
     queryKey: ['category', category],
@@ -42,27 +47,46 @@ const CommunityCategoryPage = () => {
 
   return (
     <div>
-      <section className="flex items-start justify-between">
-        <div className="flex flex-col items-start gap-4">
-          <Button variant={'ghost'}>
-            <ChevronLeft />
-            커뮤니티 목록으로
-          </Button>
-          <h1 className="text-4xl font-bold text-gray-800">{data.data.name}</h1>
-          <div className="flex items-center gap-2">
-            {data.data.categoryGenres.map((genre: Gerne) => (
-              <Badge key={genre.id} variant={'default'} className="text-lg">
-                #{genre.name}
-              </Badge>
-            ))}
+      <section className="flex h-full justify-between">
+        <div className="flex flex-col justify-between gap-4">
+          <div className="flex flex-col items-start gap-4">
+            <Button variant={'ghost'} className="font-bold">
+              <ChevronLeft />
+              커뮤니티 목록으로
+            </Button>
+            <h1 className="text-5xl font-bold">{data.data.name}</h1>
+            <div className="flex items-center gap-2">
+              {data.data.categoryGenres.map((genre: Gerne) => (
+                <Badge key={genre.id} variant={'outline'} className="text-lg">
+                  #{genre.name}
+                </Badge>
+              ))}
+            </div>
           </div>
+          <Button
+            variant={bookmarkChecked ? 'default' : 'ghost'}
+            size={'icon'}
+            onClick={() => setBookmarkChecked(!bookmarkChecked)}
+            className="h-12 w-12 rounded-full [&_svg]:size-8"
+          >
+            {bookmarkChecked ? (
+              <BookmarkCheck strokeWidth={2} />
+            ) : (
+              <Bookmark strokeWidth={2} />
+            )}
+          </Button>
         </div>
-        <div className="flex items-center space-x-2 bg-slate-500">
-          <div className="relative h-72 w-96 rounded-lg">
-            <img src="" alt="아무거나" className="h-full w-full" />
-            {/* background: linear-gradient(90deg, #000 5%, #000000b3 30%, #00000073 50%, #0003 80%, #0000 100%); */}
-            <div className="absolute bottom-0 left-0 h-full w-full bg-gradient-to-t from-white to-transparent to-50%"></div>
-            <div className="absolute bottom-0 left-0 h-full w-full bg-gradient-to-r from-white to-transparent to-50%"></div>
+        <div className="flex items-center bg-slate-500">
+          <div className="relative h-[400px] w-[600px] overflow-hidden">
+            <img
+              src={TestImg}
+              alt="아무거나"
+              className="h-full w-full object-cover object-center"
+            />
+
+            <div className="absolute left-[-3%] top-[-2%] h-[102%] w-[70%] bg-gradient-to-r from-white via-white/30 to-transparent"></div>
+
+            <div className="via-white/86 absolute bottom-0 left-0 top-[33%] h-[68%] w-full bg-gradient-to-t from-white via-white/30 to-transparent"></div>
           </div>
         </div>
       </section>
