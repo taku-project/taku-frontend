@@ -280,7 +280,7 @@ const MarketDetailPage = () => {
           >
             <Plus />
           </Button>
-          <div className="absolute -right-2 bottom-1/2 z-10 w-[140px] translate-y-1/2 rounded bg-gray-100/50 px-3 py-2 font-bold text-black opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
+          <div className="absolute -right-2 bottom-1/2 z-10 w-[140px] translate-y-1/2 rounded bg-gray-100/50 px-3 py-2 font-semibold text-black opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
             장터 게시글 추가
           </div>
         </Link>
