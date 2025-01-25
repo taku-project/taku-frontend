@@ -10,7 +10,7 @@ import {
   User,
   X,
 } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import LogoIcon from '@/assets/logo_icon.png';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -168,9 +168,9 @@ export default function Header() {
             ) : (
               <Button
                 className="bg-[#FDB813] text-white hover:bg-[#FDB813]/90"
-                onClick={handleLogin}
+                asChild
               >
-                로그인
+                <Link to={'/auth/login'}>로그인</Link>
               </Button>
             )}
           </div>
