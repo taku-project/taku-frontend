@@ -56,6 +56,8 @@ const getCommunityPosts = async (
   return response.data;
 };
 
+const asc = 'false';
+
 const DataTable = () => {
   const { category } = useParams();
 
@@ -67,8 +69,6 @@ const DataTable = () => {
   const [selectedFilter, setSelectedFilter] = useState(
     COMMUNITY_FILTERS[0].value,
   );
-
-  const [asc, setAsc] = useState('false');
 
   const { status, data, error, isPlaceholderData } = useQuery({
     queryKey: [
