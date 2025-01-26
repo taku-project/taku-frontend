@@ -5,6 +5,7 @@ import { Bookmark, BookmarkCheck, ChevronLeft } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
 import TestImg from '@/assets/스크린샷.png';
+import DataTable from '@/components/data-table/DataTable';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -91,7 +92,9 @@ const CommunityCategoryPage = () => {
         </div>
       </section>
       <Separator className="my-4" />
-      <div></div>
+      <div>
+        <DataTable />
+      </div>
     </div>
   );
 };

@@ -5,14 +5,14 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { ChevronDown, Search, Star } from 'lucide-react';
+import { ChevronDown, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import CategoryDialog from '@/components/category/CategoryDialog';
+import SearchBar from '@/components/search-bar/SearchBar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import SectionLayout from '@/layout/SectionLayout';
 import { testAxios } from '@/lib/axiosInstance';
@@ -69,7 +69,7 @@ const CommunityPage = () => {
     staleTime: 5000,
   });
 
-  // Prefetch the next page!
+  // 다음 페이지를 미리 가져옵니다!
   useEffect(() => {
     if (!isPlaceholderData && data?.hasMore) {
       quiryClient.prefetchQuery({
@@ -93,12 +93,6 @@ const CommunityPage = () => {
       </div>
     );
   }
-
-  // 숫자 순차정렬
-  const numArr = [2, 12, 7, 9, 16, 13, 24, 21, 11, 15];
-
-  numArr.sort((a, b) => a - b);
-  console.log('numArr', numArr);
 
   return (
     <>
@@ -140,16 +134,7 @@ const CommunityPage = () => {
         </aside>
         <SectionLayout>
           {/* Search Bar max 560px */}
-          <div className="relative mx-auto my-[80px] max-w-[560px]">
-            <Search className="absolute right-5 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-            <Input
-              placeholder="검색하기..."
-              className="rounded-full pl-5"
-              onChange={(e) => setSearch(e.target.value)}
-              value={search}
-            />
-          </div>
-
+          <SearchBar search={search} setSearch={setSearch} />
           {/* Popular Categories */}
           <section className="mb-12">
             <h2 className="mb-6 text-2xl font-semibold">인기 카테고리</h2>
