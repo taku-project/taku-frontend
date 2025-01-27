@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import axios, { AxiosResponse } from 'axios';
 import { MessageSquareText, ThumbsDown, ThumbsUp, X } from 'lucide-react';
 
 import CommentContent from '@/components/comments/CommentList';
 import CommentMainForm from '@/components/comments/CommentMainForm';
 import LoadingSpinner from '@/components/loading/LoadingSpinner';
+import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -19,6 +21,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
+import VideoPlayer from '@/components/video-player/VideoPlayer';
 
 export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -32,6 +35,13 @@ const ShortsPage = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
+  const [selectedVideoInfo, setSelectedVideoInfo] = useState<any>(null);
+
+  const [currentTime, setCurrentTime] = useState(0);
+  const logCurrentTime = () => {
+    console.log('비디오 시간', currentTime);
+    setCurrentTime(0);
+  };
 
   const [isThumbsUp, setIsThumbsUp] = useState(false);
   const [isThumbsDown, setIsThumbsDown] = useState(false);
@@ -165,7 +175,7 @@ const ShortsPage = () => {
     }
 
     getVedioDetail(selectedVideo.id).then((res) => {
-      console.log(res.data);
+      setSelectedVideoInfo(res.data.data);
     });
 
     getComments(selectedVideo.id).then((res) => {
@@ -178,8 +188,15 @@ const ShortsPage = () => {
     });
   }, [selectedVideo]);
 
+  useEffect(() => {
+    if (currentTime > 0) {
+      logCurrentTime();
+    }
+  }, [selectedVideoInfo]);
+
   return (
     <div className="h-full bg-stone-900">
+      <div className="text-white">{currentTime}</div>
       <div className={'flex w-full justify-center gap-20 p-4'}>
         <section className="inset-x-0 flex w-[600px] items-end gap-4 text-white">
           {/* video layout */}
@@ -196,12 +213,25 @@ const ShortsPage = () => {
                 {videos.map((info: any, index: number) => (
                   <CarouselItem key={index} className="w-full basis-11/12">
                     <div className="relative h-full w-full overflow-hidden rounded-lg">
-                      <video
-                        className="h-full w-full"
-                        // src={videoSrc}
-                        controls
+                      <VideoPlayer
+                        currentTime={currentTime}
+                        setCurrentTime={setCurrentTime}
+                        src={
+                          selectedVideoInfo?.m3u8_url
+                            ? selectedVideoInfo?.m3u8_url
+                            : ''
+                        }
+                        type="m3u8"
                       />
-                      <div className="[text-shadow: 0 0 10px #000000]; absolute bottom-20 left-0 z-10 bg-[#00000000] px-4 py-1 text-white">
+                      <div className="absolute bottom-20 left-0 z-10 bg-[#00000000] px-4 py-1 text-white [text-shadow:_0_1px_0_rgb(0_0_0_/_40%)]">
+                        <div>
+                          <Avatar className="h-6 w-6">
+                            <AvatarImage
+                              src={selectedVideoInfo?.profile_img_url}
+                            />
+                            <AvatarFallback>aa</AvatarFallback>
+                          </Avatar>
+                        </div>
                         <p>{info.title}</p>
                         <p>{info.description}</p>
                       </div>
