@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { RHFUpload } from '@/components/hook-form/rhf-upload';
+import { RHFUpload } from '@/components/hook-form/RhfUpload';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -37,16 +37,18 @@ const addProductSchema = z.object({
   }),
   title: z.string().nonempty('제목을 입력해주세요.'),
   description: z.string().nonempty('상품 정보를 입력해주세요.'),
-  price: z
-    .string()
-    .transform((val) => {
-      const numberValue = parseFloat(val);
-      if (isNaN(numberValue)) {
-        throw new Error('가격은 숫자로 입력해주세요.');
+  price: z.preprocess(
+    (val) => {
+      if (typeof val === 'string') {
+        const numberValue = Number(val);
+        return isNaN(numberValue) ? undefined : numberValue;
       }
-      return numberValue;
-    })
-    .refine((val) => val > 0, { message: '가격은 0보다 커야 합니다.' }),
+      return val;
+    },
+    z.number().refine((val) => val > 0, {
+      message: '가격은 0보다 커야 합니다.',
+    }),
+  ),
   imageList: z
     .array(
       z.object({
@@ -78,7 +80,6 @@ const CreateMarketPage = () => {
     resolver: zodResolver(addProductSchema),
     defaultValues: {
       title: '',
-      price: 0,
       description: '',
       imageList: undefined,
     },
@@ -104,7 +105,6 @@ const CreateMarketPage = () => {
   );
 
   const onSubmit = (data: z.infer<typeof addProductSchema>) => {
-    console.log(data);
     mutate(data);
   };
 
