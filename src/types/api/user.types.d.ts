@@ -1,5 +1,7 @@
 import { operations } from './apiSchema.types';
 
+export type OAuthProvider = 'KAKAO' | 'NAVER' | 'GOOGLE';
+
 /**
  * path: '/api/user'
  */
@@ -9,9 +11,12 @@ import { operations } from './apiSchema.types';
  * @description 유저를 등록합니다.
  */
 
-export type RegisterUserRequest = NonNullable<
+type RegisterUser = NonNullable<
   operations['registerUser']['requestBody']
 >['content']['multipart/form-data'];
+export interface RegisterUserRequest extends RegisterUser {
+  profileImage?: File;
+}
 export type RegisterUserSuccessResponse =
   operations['registerUser']['responses'][201]['content']['*/*'];
 
@@ -48,11 +53,6 @@ export type EditUserSuccessResponse =
 
 /**
  * path: '/api/user/nickname/{nickname}'
- */
-
-/**
- * 유저 등록
- * @description 유저를 등록합니다.
  */
 
 /**
