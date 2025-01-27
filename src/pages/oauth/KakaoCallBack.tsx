@@ -1,26 +1,24 @@
 import { useEffect } from 'react';
 
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import LoadingSpinner from '@/components/loading/LoadingSpinner';
-import { KAKAO_REDIRECT_URL } from '@/constants/api/oauth';
-import { kakaoLogin } from '@/services/auth';
 
 const KakaoCallBack = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const code = searchParams.get('code');
-  console.log(code);
+  const provider = 'KAKAO';
   useEffect(() => {
     if (code) {
-      const response = kakaoLogin({ code, redirectURL: KAKAO_REDIRECT_URL });
-      console.log(response);
+      console.log(code);
+      navigate(`/auth/signup?code=${code}&provider=${provider}`);
     }
   }, [code]);
 
   return (
     <div>
-      {`카카오 로그인 code: ${code}`}
       <LoadingSpinner />
     </div>
   );

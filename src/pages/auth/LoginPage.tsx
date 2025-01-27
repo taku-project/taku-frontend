@@ -33,17 +33,6 @@ const LoginPage = () => {
           </Button>
         </Link>
       </div>
-      <h2 className="text-center text-base text-[#64748B]">
-        아직 계정이 없으신가요?
-        <Link to={'/auth/signup'}>
-          <Button
-            className="ml-2 p-0 text-sm text-[#0F172A] underline"
-            variant="link"
-          >
-            회원가입하기
-          </Button>
-        </Link>
-      </h2>
     </div>
   );
 };
