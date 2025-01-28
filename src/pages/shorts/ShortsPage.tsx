@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import axios, { AxiosResponse } from 'axios';
-import { MessageSquareText, ThumbsDown, ThumbsUp, X } from 'lucide-react';
+import { AxiosResponse } from 'axios';
+import { X } from 'lucide-react';
 
 import CommentContent from '@/components/comments/CommentList';
 import CommentMainForm from '@/components/comments/CommentMainForm';
 import LoadingSpinner from '@/components/loading/LoadingSpinner';
+import ShortsButtonLayout from '@/components/shorts/ShortsButtonLayout';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,8 +23,7 @@ import {
   CarouselItem,
 } from '@/components/ui/carousel';
 import VideoPlayer from '@/components/video-player/VideoPlayer';
-
-export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+import { testAxios } from '@/lib/axiosInstance';
 
 const ShortsPage = () => {
   const [openComments, setOpenComments] = useState(true);
@@ -43,24 +43,19 @@ const ShortsPage = () => {
     setCurrentTime(0);
   };
 
-  const [isThumbsUp, setIsThumbsUp] = useState(false);
-  const [isThumbsDown, setIsThumbsDown] = useState(false);
-
   // 쇼츠 리스트 가져오기
   const getVedioList = async (): Promise<AxiosResponse> => {
-    return await axios.get(BACKEND_URL + '/api/shorts/recommend');
+    return await testAxios.get('/api/shorts/recommend');
   };
 
   // 쇼츠 상세 정보 가져오기
   const getVedioDetail = async (shartsId: string): Promise<AxiosResponse> => {
-    return await axios.get(BACKEND_URL + '/api/shorts/' + shartsId);
+    return await testAxios.get('/api/shorts/' + shartsId);
   };
 
   // 쇼츠 댓글 가져오기
   const getComments = async (shartsId: string): Promise<AxiosResponse> => {
-    return await axios.get(
-      BACKEND_URL + '/api/shorts/' + shartsId + '/comment',
-    );
+    return await testAxios.get('/api/shorts/' + shartsId + '/comment');
   };
 
   //리셋 댓글목록
@@ -100,26 +95,6 @@ const ShortsPage = () => {
       api.scrollNext();
     }
   }, [api]);
-
-  // 좋아요 버튼 클릭 이벤트 핸들러
-  const handleClickThumbsUp = (prevValue: boolean) => {
-    if (!prevValue) {
-      setIsThumbsUp(true);
-      setIsThumbsDown(false);
-      return;
-    }
-    setIsThumbsUp(false);
-  };
-
-  // 싫어요 버튼 클릭 이벤트 핸들러
-  const handleClickThumbsDown = (prevValue: boolean) => {
-    if (!prevValue) {
-      setIsThumbsDown(true);
-      setIsThumbsUp(false);
-      return;
-    }
-    setIsThumbsDown(false);
-  };
 
   // 스크롤 이벤트 핸들러
   useEffect(() => {
@@ -167,6 +142,13 @@ const ShortsPage = () => {
       setSelectedVideo(videos[api.selectedScrollSnap()]);
     });
   }, [api, videos]);
+
+  // 비디오 정보 리셋
+  const resetVideoInfo = () => {
+    getVedioDetail(selectedVideo.id).then((res) => {
+      setSelectedVideoInfo(res.data.data);
+    });
+  };
 
   // 선택된 비디오가 변경되면
   useEffect(() => {
@@ -248,40 +230,11 @@ const ShortsPage = () => {
             </Carousel>
           </div>
           {/* button layout */}
-          <div className="flex flex-col items-center justify-center gap-2 text-center">
-            <div>
-              <Button
-                size="icon"
-                variant={isThumbsUp ? 'default' : 'secondary'}
-                className="rounded-full"
-                onClick={() => handleClickThumbsUp(isThumbsUp)}
-              >
-                <ThumbsUp />
-              </Button>
-              <p>{selectedVideo?.popularity_matic?.likes}</p>
-            </div>
-            <div>
-              <Button
-                size="icon"
-                variant={isThumbsDown ? 'default' : 'secondary'}
-                className="rounded-full"
-                onClick={() => handleClickThumbsDown(isThumbsDown)}
-              >
-                <ThumbsDown />
-              </Button>
-            </div>
-            <div>
-              <Button
-                size="icon"
-                variant="secondary"
-                className="rounded-full"
-                onClick={() => setOpenComments((prevValue) => !prevValue)}
-              >
-                <MessageSquareText />
-              </Button>
-              <p>{selectedVideo?.popularity_matic?.comments}</p>
-            </div>
-          </div>
+          <ShortsButtonLayout
+            selectedVideoInfo={selectedVideoInfo}
+            setOpenComments={setOpenComments}
+            resetVideoInfo={resetVideoInfo}
+          />
         </section>
         {openComments && (
           <aside className="h-full w-[480px]">
