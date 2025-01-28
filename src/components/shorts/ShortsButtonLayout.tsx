@@ -6,6 +6,8 @@ import { MessageSquareText, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { testAxios } from '@/lib/axiosInstance';
 
+import ShortsUploadDialog from './ShortsUploadDialog';
+
 const addShortsLike = async (shortsId: string): Promise<AxiosResponse> => {
   return await testAxios.post('/api/shorts/' + shortsId + '/likes');
 };
@@ -80,7 +82,12 @@ const ShortsButtonLayout = ({
     }
   };
   return (
-    <div className="flex flex-col items-center justify-center gap-2 text-center">
+    <div className="flex flex-col items-center justify-center gap-4 text-center text-sm">
+      {/* 업로드 버튼 */}
+      <div>
+        <ShortsUploadDialog />
+        <p>업로드</p>
+      </div>
       {/* 좋아요 버튼 */}
       <div>
         <Button
@@ -90,7 +97,7 @@ const ShortsButtonLayout = ({
               ? 'default'
               : 'secondary'
           }
-          className="rounded-full"
+          className="h-12 w-12 rounded-full [&_svg]:size-5"
           onClick={handleClickThumbsUp}
         >
           <ThumbsUp />
@@ -106,17 +113,18 @@ const ShortsButtonLayout = ({
               ? 'default'
               : 'secondary'
           }
-          className="rounded-full"
+          className="h-12 w-12 rounded-full [&_svg]:size-5"
           onClick={handleClickThumbsDown}
         >
           <ThumbsDown />
         </Button>
+        <p>싫어요</p>
       </div>
       <div>
         <Button
           size="icon"
           variant="secondary"
-          className="rounded-full"
+          className="h-12 w-12 rounded-full [&_svg]:size-5"
           onClick={() => setOpenComments((prevValue) => !prevValue)}
         >
           <MessageSquareText />

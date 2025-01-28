@@ -178,7 +178,7 @@ const ShortsPage = () => {
 
   return (
     <div className="h-full bg-stone-900">
-      <div className="text-white">{currentTime}</div>
+      {/* <div className="text-white">{currentTime}</div> */}
       <div className={'flex w-full justify-center gap-20 p-4'}>
         <section className="inset-x-0 flex w-[600px] items-end gap-4 text-white">
           {/* video layout */}
