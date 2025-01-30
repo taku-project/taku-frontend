@@ -38,20 +38,20 @@ const VideoPlayer = ({
   return type === 'm3u8' ? (
     <video
       className="h-full w-full"
-      autoPlay
       onTimeUpdate={handleTimeUpdate}
       onEnded={handleEnded}
       ref={videoRef}
+      muted
       controls
     />
   ) : (
     <video
       className="h-full w-full"
-      autoPlay
       onTimeUpdate={handleTimeUpdate}
       onEnded={handleEnded}
       ref={videoRef}
       src={src}
+      muted
       controls
     />
   );
