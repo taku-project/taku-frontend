@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FileVideo, X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { FileVideo, Loader2, X } from 'lucide-react';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -23,37 +23,43 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useUploadShorts } from '@/queries/shorts';
 
 import { Badge } from '../ui/badge';
+import { Label } from '../ui/label';
+import { Upload } from '../upload';
 
-const addCategorySchema = z.object({
+const uploadShortsSchema = z.object({
   title: z.string().nonempty('제목을 입력해주세요.'),
   description: z.string().nonempty('설명을 입력해주세요.'),
-  multiUpload: z.array(
-    z.object({
-      preview: z.string(),
-      name: z.string(),
-      size: z.number(),
-      type: z.string(),
-    }),
-  ),
+  file: z.any().refine((v) => !!v, { message: '파일을 업로드해주세요.' }),
   tags: z.array(z.string()),
 });
 
 const ShortsUploadDialog = () => {
-  const form = useForm<z.infer<typeof addCategorySchema>>({
-    resolver: zodResolver(addCategorySchema),
+  const onSuccessCb = () => {
+    setOpen(false);
+  };
+
+  const { mutate: uploadShortsMutate, isPending } = useUploadShorts({
+    onSuccessCb,
+  });
+
+  const [open, setOpen] = useState(false);
+
+  const form = useForm<z.infer<typeof uploadShortsSchema>>({
+    resolver: zodResolver(uploadShortsSchema),
     defaultValues: {
       title: '',
       description: '',
-      multiUpload: [],
+      file: null,
       tags: [],
     },
   });
   const [inputValue, setInputValue] = useState('');
 
-  const onSubmit = (data: z.infer<typeof addCategorySchema>) => {
-    console.log('123', data);
+  const onSubmit = (data: z.infer<typeof uploadShortsSchema>) => {
+    uploadShortsMutate(data);
   };
 
   const { setValue, watch } = form;
@@ -80,13 +86,31 @@ const ShortsUploadDialog = () => {
     }
   };
 
+  const handleDropSingleFile = useCallback(
+    (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+
+      const newFile = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      });
+
+      if (newFile) {
+        setValue('file', newFile, { shouldValidate: true });
+      }
+    },
+    [setValue],
+  );
+
   return (
-    <Dialog modal={false}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           size="icon"
           variant={'secondary'}
           className="h-12 w-12 rounded-full [&_svg]:size-5"
+          onClick={() => {
+            form.reset();
+          }}
         >
           <FileVideo />
         </Button>
@@ -125,6 +149,39 @@ const ShortsUploadDialog = () => {
                   </FormControl>
                   <FormMessage />
                 </FormItem>
+              )}
+            />
+            <Controller
+              name="file"
+              control={form.control}
+              render={({ field, fieldState: { error } }) => (
+                <div>
+                  <Label className="text-base">
+                    비디오 파일 업로드
+                    <span className="text-sm text-gray-500" aria-hidden="true">
+                      -[최대 150MB]
+                    </span>
+                  </Label>
+                  <Upload
+                    maxSize={
+                      // 150MB
+                      150 * 1024 * 1024
+                    }
+                    accept={{ 'video/*': [] }}
+                    error={!!error}
+                    file={field.value}
+                    {...field}
+                    onDrop={handleDropSingleFile}
+                    onDelete={() =>
+                      setValue('file', null, { shouldValidate: true })
+                    }
+                  />
+                  {!!error && (
+                    <FormMessage className="text-center">
+                      {error.message}
+                    </FormMessage>
+                  )}
+                </div>
               )}
             />
 
@@ -166,7 +223,10 @@ const ShortsUploadDialog = () => {
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">저장하기</Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending && <Loader2 className="animate-spin" size={24} />}
+                {isPending ? '업로드 중...' : '업로드'}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

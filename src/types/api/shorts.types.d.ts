@@ -9,9 +9,16 @@ import { operations } from './apiSchema.types';
  * @description 파일을 스토리지에 업로드합니다.
  */
 
-type UploadShortsRequest = NonNullable<
+type UploadShorts = NonNullable<
   operations['uploadFile_1']['requestBody']
 >['content']['multipart/form-data'];
+
+export interface UploadShortsRequest extends UploadShorts {
+  file?: File;
+}
+
+export type UploadShortsSuccessResponse =
+  operations['uploadFile_1']['responses'][200]['content']['*/*'];
 
 /**
  * path: '/api/shorts/{shortsId}'
